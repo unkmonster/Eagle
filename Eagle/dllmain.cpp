@@ -4,7 +4,9 @@
 #include <thread>
 #include <chrono>
 #include <MinHook.h>
+
 #include "Hooking/HookManager.h"
+#include "Utils/Singleton.h"
 
 using namespace std::chrono_literals;
 
@@ -14,6 +16,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 		global.dllModule = hModule;
 
 		auto hThread = CreateThread(nullptr, NULL, [](LPVOID)->DWORD {
+			gHookManager = Singleton<HookManager>::initialize();
 			gHookManager->enable_all();
 
 			while (!(GetAsyncKeyState(VK_END) & 0x1))

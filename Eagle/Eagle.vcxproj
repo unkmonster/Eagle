@@ -154,16 +154,18 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Global.cpp" />
-    <ClCompile Include="Hooking\HookManager.cpp" />
     <ClCompile Include="Hooking\Hooks.cpp" />
     <ClCompile Include="utility.cpp" />
+    <ClCompile Include="Utils\Singleton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="Hooking\HookManager.h" />
     <ClInclude Include="Hooking\minhookcpp.h" />
+    <ClInclude Include="Pointers.h" />
     <ClInclude Include="Utility.h" />
+    <ClInclude Include="Utils\Singleton.h" />
     <ClInclude Include="win_error.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
