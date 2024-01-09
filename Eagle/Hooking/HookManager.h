@@ -22,6 +22,10 @@ private:
 	HookManager() :
 		hLoadLibraryA(LoadLibraryA, Hooks::LoadLibraryA, "LoadLibraryA") {}
 public:
+	~HookManager() {
+		fmt::output_debug(__func__);
+	}
+
 	void enable_all() {
 		hLoadLibraryA.enable();
 	}

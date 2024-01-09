@@ -13,23 +13,28 @@
 
 using namespace std::chrono_literals;
 
+DWORD Launcher(LPVOID param) {
+	gLogger = Singleton<Logger>::initialize();
+	gHookManager = Singleton<HookManager>::initialize();
+	gHookManager->enable_all();
+
+	while (!(GetAsyncKeyState(VK_END) & 0x1))
+		std::this_thread::sleep_for(1ms);
+	FreeLibraryAndExitThread(global.dllModule, 0);
+}
+
 BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
 		DisableThreadLibraryCalls(hModule);
-		global.dllModule = hModule;
+		global.dllModule = hModule; // TODO
 
-		auto hThread = CreateThread(nullptr, NULL, [](LPVOID)->DWORD {
-			gLogger = Singleton<Logger>::initialize();
-			gHookManager = Singleton<HookManager>::initialize();
-			gHookManager->enable_all();
-
-
-			while (!(GetAsyncKeyState(VK_END) & 0x1))
-				std::this_thread::sleep_for(1ms);
-
-			FreeLibraryAndExitThread(global.dllModule, 0);
-		}, nullptr, 0, nullptr);
-		return TRUE;
+		if (CreateThread(nullptr, NULL, Launcher, nullptr, 0, nullptr) == NULL) {
+			MessageBoxA(NULL, "Failed to create launch thread!", NULL, MB_ICONERROR);
+			return FALSE;
+		}
+	} else if (reason == DLL_PROCESS_DETACH) {
+		Singleton<HookManager>::destroy();
+		Singleton<Logger>::destroy();
 	}
-	return FALSE;
+	return TRUE;
 }

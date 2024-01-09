@@ -28,6 +28,7 @@ public:
 
 	~MinHookCpp() {
 		disable();
+		fmt::output_debug(__func__);
 	}
 
 	MinHookCpp(const MinHookCpp&) = delete;

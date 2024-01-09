@@ -56,6 +56,7 @@ public:
 			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), m_oConMode.value());
 		else 
 			FreeConsole();
+		fmt::output_debug(__func__);
 	}
 private:
 	std::optional<DWORD> m_oConMode;
