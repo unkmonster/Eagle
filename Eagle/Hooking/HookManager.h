@@ -8,6 +8,7 @@
 #include "minhookcpp.h"
 #include "Utility.h"
 #include "Utils/Singleton.h"
+#include "Logger.h"
 
 struct Hooks {
 	static HMODULE WINAPI LoadLibraryA(LPCSTR lpLibFileName);
@@ -27,8 +28,8 @@ public:
 
 private:
 	struct MINHOOK {
-		MINHOOK() { fmt::output_debug("{} {}", "MH_Initialize", (int)MH_Initialize()); }
-		~MINHOOK() { fmt::output_debug("{} {}", "MH_Uninitialize", (int)MH_Uninitialize()); }
+		MINHOOK() { MH_Initialize(); }
+		~MINHOOK() { MH_Uninitialize(); }
 	} minHook;
 
 	MinHookCpp<decltype(LoadLibraryA)> hLoadLibraryA;

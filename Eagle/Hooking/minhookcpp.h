@@ -1,9 +1,12 @@
 #pragma once
 
-#include <MinHook.h>
 #include <stdexcept>
+
+#include <MinHook.h>
 #include <fmt/format.h>
+
 #include "Utility.h"
+#include "Logger.h"
 
 template <typename T>
 class MinHookCpp {
@@ -16,9 +19,9 @@ public:
 			if (result != MH_OK)
 				throw std::runtime_error(fmt::format("({}) Failed to MH_CreateHook '{}'", static_cast<int>(result), m_name).c_str());
 			m_disabled = false;
-			fmt::output_debug("Created Hook '{}'", m_name);
+			SPDLOG_DEBUG("Created Hook '{}'", m_name);
 		} catch (const std::runtime_error& err) {
-			fmt::output_debug(err.what());
+			SPDLOG_DEBUG(err.what());
 		}
 		
 	}
@@ -50,7 +53,7 @@ public:
 		if (auto result = MH_DisableHook(m_target); result != MH_OK)
 			throw std::runtime_error(fmt::format("Failed to MH_DisableHook ({})", static_cast<int>(result)).c_str());
 		m_disabled = true;
-		fmt::output_debug("Disabled Hook '{}'", m_name);
+		SPDLOG_DEBUG("Disabled Hook '{}'", m_name);
 	}
 
 	auto get_origin() {
