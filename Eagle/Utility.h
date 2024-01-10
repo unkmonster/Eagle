@@ -9,7 +9,7 @@ namespace fmt {
 template <typename... Args>
 inline void output_debug(const std::string& msg, Args&&... args) {
 #ifdef _DEBUG
-	OutputDebugStringA(format("[{}] {}", PROJECTNAME, format(msg, std::forward<Args>(args)...)).c_str());
+	OutputDebugStringA(format("[{}] {}\n", PROJECTNAME, format(msg, std::forward<Args>(args)...)).c_str());
 #endif // _DEBUG
 }
 } // fmt
@@ -28,7 +28,7 @@ std::shared_ptr<char> GetLastErrorTextA(DWORD err_code);
 template <typename T>
 inline size_t GetModuleLength(T m) {
 	if (!m) return 0;
-	auto addr = reinterpret_cast<uintptr_t>(m);
+	auto addr = (uintptr_t)(m);
 
 	auto dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(addr);
 	auto ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(addr + dosHeader->e_lfanew);
