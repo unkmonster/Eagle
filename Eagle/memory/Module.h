@@ -17,7 +17,7 @@ public:
 	explicit Module(const std::string& name): Module(name, GetModuleHandleA(name.c_str())) {}
 
 	template <typename T>
-	T get() { return (T)(m_base); }
+	T get() const { return (T)(m_base); }
 
 	auto name() const { return m_name; }
 

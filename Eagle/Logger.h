@@ -16,7 +16,7 @@
 #undef SPDLOG_DEBUG
 
 template <typename... Args>
-inline void spd_debug(Args... args) {
+inline void spd_debug(Args&&... args) {
 	fmt::output_debug(std::forward<Args>(args)...);
 	SPDLOG_LOGGER_DEBUG(spdlog::default_logger_raw(), std::forward<Args>(args)...);
 }

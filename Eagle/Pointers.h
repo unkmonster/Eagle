@@ -6,22 +6,27 @@
 #include "Utility.h"
 #include "Logger.h"
 #include "memory/Module.h"
+#include "memory/Pattern.h"
+#include "Global.h"
 
 #define DLLMODULE(name) Module m##name = Module(#name)
 
 struct Pointers {
 	friend class Singleton<Pointers>;
+public:
+	Module mian;
 
-	// module
-	Module mKERNEL32;
+	Pointer test;
 
 	~Pointers() {
 		fmt::output_debug(__func__);
 	}
 private:
 	Pointers():
-		mKERNEL32("KERNEL32") {
-		SPDLOG_DEBUG("{} {} -- 0x{:X}", mKERNEL32.name(), mKERNEL32.size(), mKERNEL32.get<uintptr_t>());
+		mian("Main", GetModuleHandleA(nullptr)),
+		test(Pattern("48 83 EC 28 E8 ? ? ? ? 48 83 C4 28 E9 ? ? ? ?", "test").find(mian).add(14).rip())
+	{
+		SPDLOG_DEBUG("0x{:X}", test.as<uintptr_t>());
 	}
 };
 
