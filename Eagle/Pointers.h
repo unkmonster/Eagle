@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <cassert>
 
-#include "Utility.h"
+#include "utils/Utility.h"
 #include "Logger.h"
 #include "memory/Module.h"
 #include "memory/Pattern.h"

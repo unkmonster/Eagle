@@ -1,6 +1,7 @@
 #pragma once
 
 #include "utility.h"
+
 #include <stdexcept>
 
 class WinError : public std::runtime_error {

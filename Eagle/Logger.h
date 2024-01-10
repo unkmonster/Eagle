@@ -11,7 +11,7 @@
 #include <spdlog/sinks/msvc_sink.h>
 
 #include "Utils/Singleton.h"
-#include "Utility.h"
+#include "Utils/Utility.h"
 
 
 class Logger {

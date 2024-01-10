@@ -18,6 +18,10 @@ public:
 	template <typename T>
 	Pointer(T addr) : m_data(reinterpret_cast<uint8_t*>(addr)) {}
 
+	explicit operator bool() {
+		return m_data;
+	}
+
 	template <typename T>
 	std::enable_if_t<std::is_pointer_v<T>, T> as() {
 		return reinterpret_cast<T>(m_data);
@@ -73,12 +77,13 @@ public:
 		auto pattern_size = m_sign.size();
 		for (std::size_t i = 0; i < module_size; ++i) {
 			if (match(m_sign, m.get<BYTE*>() + i)) {
-				SPDLOG_DEBUG("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
+				SPDLOG_INFO("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
 				return m.get<BYTE*>() + i;
 			}
-				
 		}
-		throw std::runtime_error(fmt::format("Unable to find pattern '{}' in <{}>", m_name, m.name()));
+		SPDLOG_WARN("Unable to find pattern '{}' in <{}>", m_name, m.name());
+		return nullptr;
+		//throw std::runtime_error(fmt::format("Unable to find pattern '{}' in <{}>", m_name, m.name()));
 	}
 private:
 	SIGNATURE m_sign;

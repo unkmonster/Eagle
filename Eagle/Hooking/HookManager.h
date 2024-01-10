@@ -6,7 +6,7 @@
 #include <MinHook.h>
 
 #include "minhookcpp.h"
-#include "Utility.h"
+#include "utils/Utility.h"
 #include "Utils/Singleton.h"
 #include "Logger.h"
 

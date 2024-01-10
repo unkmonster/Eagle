@@ -5,7 +5,7 @@
 #include <MinHook.h>
 #include <fmt/format.h>
 
-#include "Utility.h"
+#include "utils/Utility.h"
 #include "Logger.h"
 
 template <typename T>

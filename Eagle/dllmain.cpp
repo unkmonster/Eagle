@@ -6,7 +6,7 @@
 #include <MinHook.h>
 
 #include "Global.h"
-#include "Utility.h"
+#include "utils/Utility.h"
 #include "Utils/Singleton.h"
 #include "Hooking/HookManager.h"
 #include "Logger.h"
@@ -19,12 +19,13 @@ DWORD Launcher(LPVOID param) {
 		gLogger = Singleton<Logger>::initialize();
 		gPointers = Singleton<Pointers>::initialize();
 		gHookManager = Singleton<HookManager>::initialize();
+		
 		gHookManager->enable_all();
 
 		while (!(GetAsyncKeyState(VK_END) & 0x1))
 			std::this_thread::sleep_for(1ms);
 	} catch (std::runtime_error& err) {
-		MessageBoxA(NULL, err.what(), NULL, MB_ICONWARNING);
+		MessageBoxA(NULL, err.what(), __func__, MB_ICONWARNING);
 	}
 	
 	FreeLibraryAndExitThread(global.dllModule, 0);

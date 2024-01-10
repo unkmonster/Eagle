@@ -1,8 +1,11 @@
 #pragma once
 
 #include <Windows.h>
+
 #include <memory>
+
 #include <fmt/format.h>
+
 #include "common.h"
 
 namespace fmt {
