@@ -13,6 +13,16 @@
 #include "Utils/Singleton.h"
 #include "Utility.h"
 
+#undef SPDLOG_DEBUG
+
+template <typename... Args>
+inline void spd_debug(Args... args) {
+	fmt::output_debug(std::forward<Args>(args)...);
+	SPDLOG_LOGGER_DEBUG(spdlog::default_logger_raw(), std::forward<Args>(args)...);
+}
+#define SPDLOG_DEBUG(...) spd_debug(__VA_ARGS__)
+
+
 class Logger {
 	friend Singleton<Logger>;
 
