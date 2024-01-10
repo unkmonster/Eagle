@@ -23,7 +23,7 @@ private:
 		hLoadLibraryA(LoadLibraryA, Hooks::LoadLibraryA, "LoadLibraryA") {}
 public:
 	~HookManager() {
-		fmt::output_debug(__func__);
+		SPDLOG_DEBUG(__func__);
 	}
 
 	void enable_all() {

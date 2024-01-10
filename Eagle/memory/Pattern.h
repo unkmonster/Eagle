@@ -73,7 +73,7 @@ public:
 		auto pattern_size = m_sign.size();
 		for (std::size_t i = 0; i < module_size; ++i) {
 			if (match(m_sign, m.get<BYTE*>() + i)) {
-				fmt::output_debug("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
+				SPDLOG_DEBUG("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
 				return m.get<BYTE*>() + i;
 			}
 				

@@ -13,15 +13,6 @@
 #include "Utils/Singleton.h"
 #include "Utility.h"
 
-#undef SPDLOG_DEBUG
-
-template <typename... Args>
-inline void spd_debug(Args&&... args) {
-	fmt::output_debug(std::forward<Args>(args)...);
-	SPDLOG_LOGGER_DEBUG(spdlog::default_logger_raw(), std::forward<Args>(args)...);
-}
-#define SPDLOG_DEBUG(...) spd_debug(__VA_ARGS__)
-
 
 class Logger {
 	friend Singleton<Logger>;
@@ -46,7 +37,7 @@ class Logger {
 		auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 		console_sink->set_level(spdlog::level::debug);
 
-		auto msvc_sink = std::make_shared<spdlog::sinks::msvc_sink_mt>();
+		auto msvc_sink = std::make_shared<spdlog::sinks::msvc_sink_mt>(false);
 		msvc_sink->set_level(spdlog::level::debug);
 
 		spdlog::sinks_init_list sinks{
@@ -66,7 +57,7 @@ public:
 			SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE), m_oConMode.value());
 		else 
 			FreeConsole();
-		fmt::output_debug(__func__);
+		SPDLOG_DEBUG(__func__);
 	}
 private:
 	std::optional<DWORD> m_oConMode;

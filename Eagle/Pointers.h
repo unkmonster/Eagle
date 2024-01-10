@@ -19,7 +19,7 @@ public:
 	Pointer test;
 
 	~Pointers() {
-		fmt::output_debug(__func__);
+		SPDLOG_DEBUG(__func__);
 	}
 private:
 	Pointers():
