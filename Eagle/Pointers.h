@@ -9,24 +9,27 @@
 #include "memory/Pattern.h"
 #include "Global.h"
 
-#define DLLMODULE(name) Module m##name = Module(#name)
+#define DBGPTR(name) spdlog::debug("[0x{1:X}] {0} ", #name, (uintptr_t)(name))
 
 struct Pointers {
 	friend class Singleton<Pointers>;
 public:
-	Module mian;
+	Module main;
+	Module mdxgi;
 
-	Pointer test;
-
-	~Pointers() {
-		SPDLOG_DEBUG(__func__);
-	}
+	// Functions
+	// method of DXGISwapChain
+	PVOID fPresent;
+	PVOID fResizeBuffers;
 private:
 	Pointers():
-		mian("Main", GetModuleHandleA(nullptr)),
-		test(Pattern("48 83 EC 28 E8 ? ? ? ? 48 83 C4 28 E9 ? ? ? ?", "test").find(mian).add(14).rip())
+		// Modules
+		main("Main", GetModuleHandleA(nullptr)),
+		mdxgi("dxgi.dll")
 	{
-		SPDLOG_DEBUG("0x{:X}", test.as<uintptr_t>());
+		// Functions
+		DBGPTR(fPresent = mdxgi.add(0x347C0).as<PVOID>());
+		DBGPTR(fResizeBuffers = mdxgi.add(0x23820).as<PVOID>());
 	}
 };
 
