@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <chrono>
+#include <future>
 
 #include <MinHook.h>
 
@@ -21,7 +22,7 @@ DWORD Launcher(LPVOID param) {
 		gPointers = Singleton<Pointers>::initialize();
 		gHookManager = Singleton<HookManager>::initialize();
 		gRenderer = Singleton<Renderer>::initialize();
-
+		
 		while (!(GetAsyncKeyState(VK_END) & 0x1))
 			std::this_thread::sleep_for(1ms);
 	} catch (std::runtime_error& err) {

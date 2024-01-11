@@ -29,7 +29,7 @@ public:
 		try {
 			disable();
 		} catch (const std::runtime_error& err) {
-			SPDLOG_WARN(err.what());
+			spdlog::warn(err.what());
 		}
 	}
 

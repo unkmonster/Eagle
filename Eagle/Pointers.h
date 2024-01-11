@@ -36,7 +36,8 @@ private:
 		assert(oWndproc = reinterpret_cast<WNDPROC>(GetWindowLongPtrA(hwnd, GWLP_WNDPROC)));
 		
 		// Functions
-		fPresent = Pattern("48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 20 41 8B E8").find(mGameOverLay).as<PVOID>();
+		fPresent = Pattern("48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 20 41 8B E8", 
+			"IDXGISwapChain::Present").find(mGameOverLay).as<PVOID>();
 		assert(fResizeBuffers = mdxgi.add(0x23820).as<PVOID>());
 	}
 };

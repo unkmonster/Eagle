@@ -10,17 +10,7 @@ std::promise<IDXGISwapChain*> Renderer::chain_pms;
 
 Renderer::Renderer() {
 	m_pDXGISwapChain = chain_pms.get_future().get();
-	if (FAILED(m_pDXGISwapChain->GetDevice(__uuidof(ID3D11Device), reinterpret_cast<void**>(&m_pD3dDevice))))
-		throw std::runtime_error("Failed to m_pDXGISwapChain->GetDevice");
-	
-	m_pD3dDevice->GetImmediateContext(&m_pD3dDeviceContext);
-	
-	ID3D11Texture2D* pBackBuffer;
-	if (SUCCEEDED(m_pDXGISwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer)))) {
-		m_pD3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pD3D11RenderTargetView);
-		pBackBuffer->Release();
-	} else
-		SPDLOG_WARN("Failed to DXGISwapChain->GetBuffer");
+	CreateRenderView();
 	
 
 	ImGui::CreateContext();
@@ -32,6 +22,7 @@ Renderer::Renderer() {
 	// Setup Platform/Renderer backends
 	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
 	assert(ImGui_ImplDX11_Init(m_pD3dDevice, m_pD3dDeviceContext));
+	//assert(ImGui_ImplDX11_CreateDeviceObjects());
 }
 
 Renderer::~Renderer() {
@@ -39,7 +30,12 @@ Renderer::~Renderer() {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+	this->ReleaseRenderView();
 }
+
+//void Renderer::init_dx(IDXGISwapChain * pswapchain) {
+//
+//}
 
 void Renderer::on_present() {
 	// Start the Dear ImGui frame

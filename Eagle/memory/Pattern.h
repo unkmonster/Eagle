@@ -38,11 +38,11 @@ public:
 		auto pattern_size = m_sign.size();
 		for (std::size_t i = 0; i < module_size; ++i) {
 			if (match(m_sign, m.as<BYTE*>() + i)) {
-				SPDLOG_INFO("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
+				spdlog::info("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
 				return m.as<BYTE*>() + i;
 			}
 		}
-		SPDLOG_WARN("Unable to find pattern '{}' in <{}>", m_name, m.name());
+		spdlog::warn("Unable to find pattern '{}' in <{}>", m_name, m.name());
 		return nullptr;
 	}
 private:

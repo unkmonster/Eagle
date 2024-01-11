@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
 
 #include "HookManager.h"
 #include "Logger.h"
@@ -17,14 +18,16 @@ HMODULE WINAPI Hooks::LoadLibraryA(LPCSTR lpLibFileName) {
 	return result;
 }
 
+
+// IDXGISwapChain
 HRESULT WINAPI Hooks::Present(IDXGISwapChain* ths, UINT SyncInterval, UINT Flags) {
 	static std::once_flag flag;
 	std::call_once(flag, [ths]() {Renderer::chain_pms.set_value(ths);});
 
 	if (Singleton<Renderer>::initialize())
-		Singleton<Renderer>::initialize()->on_present();
+		gRenderer->on_present();	// must be not nullptr
 
-	return gHookManager->Present.get_origin()(ths, SyncInterval, Flags);
+	return gHookManager->Present.call_origin(ths, SyncInterval, Flags);
 }
 
 HRESULT __stdcall Hooks::ResizeBuffers(
@@ -35,8 +38,30 @@ HRESULT __stdcall Hooks::ResizeBuffers(
 	UINT SwapChainFlags
 ) {
 	SPDLOG_DEBUG("");
-	return gHookManager->ResizeBuffers.call_origin(ths, BufferCount, Width, Height, NewFormat, SwapChainFlags);
+
+	if (!gRenderer)
+		return gHookManager->ResizeBuffers.call_origin(
+			ths, BufferCount,
+			Width, Height,
+			NewFormat, SwapChainFlags
+	);
+
+	gRenderer->ReleaseRenderView();
+	//ImGui_ImplDX11_CreateDeviceObjects();
+
+	auto rst = gHookManager->ResizeBuffers.call_origin(
+		ths, BufferCount, 
+		Width, Height, 
+		NewFormat, SwapChainFlags
+	);
+	
+	if (SUCCEEDED(rst)) {
+		gRenderer->CreateRenderView();
+		//ImGui_ImplDX11_InvalidateDeviceObjects();
+	}
+	return rst;
 }
+
 
 LRESULT CALLBACK Hooks::WNDPROC(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam))
