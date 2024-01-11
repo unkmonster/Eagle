@@ -24,6 +24,8 @@ struct Hooks {
 		/* [in] */ DXGI_FORMAT NewFormat,
 		/* [in] */ UINT SwapChainFlags
 	);
+
+	static LRESULT CALLBACK WNDPROC(HWND, UINT, WPARAM, LPARAM);
 };
 
 
@@ -31,19 +33,28 @@ class HookManager {
 	friend Hooks;
 	friend Singleton<HookManager>;
 private:
-	HookManager() try:
+	HookManager(bool enable_now = true) try:
 		LoadLibraryA(::LoadLibraryA, Hooks::LoadLibraryA, "LoadLibraryA"),
 		Present(gPointers->fPresent, Hooks::Present, "Present"),
 		ResizeBuffers(gPointers->fResizeBuffers, Hooks::ResizeBuffers, "ResizeBuffers")
-	{} catch (const std::runtime_error& err) {
+	{
+		if (enable_now)
+			enable_all();
+	} catch (const std::runtime_error& err) {
 		SPDLOG_WARN(err.what());
 	}
 public:
+	~HookManager() {
+		disable_all();
+	}
+
 	void enable_all() {
 		MH_EnableHook(MH_ALL_HOOKS);
+		SetWindowLongPtrA(gPointers->hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(Hooks::WNDPROC));
 	}
 
 	void disable_all() {
+		SetWindowLongPtrA(gPointers->hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(gPointers->oWndproc));
 		MH_DisableHook(MH_ALL_HOOKS);
 	}
 private:

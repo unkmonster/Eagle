@@ -44,7 +44,6 @@ public:
 		}
 		SPDLOG_WARN("Unable to find pattern '{}' in <{}>", m_name, m.name());
 		return nullptr;
-		//throw std::runtime_error(fmt::format("Unable to find pattern '{}' in <{}>", m_name, m.name()));
 	}
 private:
 	SIGNATURE m_sign;

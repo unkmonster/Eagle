@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Windows.h>
 #include <cassert>
@@ -16,20 +16,28 @@ struct Pointers {
 public:
 	Module main;
 	Module mdxgi;
+	Module mGameOverLay;
 
 	// Functions
 	// method of DXGISwapChain
 	PVOID fPresent;
 	PVOID fResizeBuffers;
+
+	WNDPROC oWndproc;
+	HWND hwnd;
 private:
 	Pointers():
 		// Modules
 		main("Main", GetModuleHandleA(nullptr)),
-		mdxgi("dxgi.dll")
+		mdxgi("dxgi.dll"),
+		mGameOverLay("gameoverlayrenderer64.dll")
 	{
+		assert(hwnd = FindWindow(TEXT("Battlefield™ 1"), nullptr));
+		assert(oWndproc = reinterpret_cast<WNDPROC>(GetWindowLongPtrA(hwnd, GWLP_WNDPROC)));
+		
 		// Functions
-		DBGPTR(fPresent = mdxgi.add(0x347C0).as<PVOID>());
-		DBGPTR(fResizeBuffers = mdxgi.add(0x23820).as<PVOID>());
+		fPresent = Pattern("48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 20 41 8B E8").find(mGameOverLay).as<PVOID>();
+		assert(fResizeBuffers = mdxgi.add(0x23820).as<PVOID>());
 	}
 };
 

@@ -11,6 +11,7 @@
 #include "Hooking/HookManager.h"
 #include "Logger.h"
 #include "Pointers.h"
+#include <render/Renderer.h>
 
 using namespace std::chrono_literals;
 
@@ -19,8 +20,7 @@ DWORD Launcher(LPVOID param) {
 		gLogger = Singleton<Logger>::initialize();
 		gPointers = Singleton<Pointers>::initialize();
 		gHookManager = Singleton<HookManager>::initialize();
-		
-		gHookManager->enable_all();
+		gRenderer = Singleton<Renderer>::initialize();
 
 		while (!(GetAsyncKeyState(VK_END) & 0x1))
 			std::this_thread::sleep_for(1ms);
@@ -42,6 +42,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 		}
 	} else if (reason == DLL_PROCESS_DETACH) {
 		Singleton<HookManager>::destroy();
+		Singleton<Renderer>::destroy();
 		Singleton<Pointers>::destroy();
 		Singleton<Logger>::destroy();
 	}

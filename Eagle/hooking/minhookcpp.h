@@ -66,7 +66,7 @@ public:
 	void disable() {
 		if (m_disabled) return;
 		if (auto result = MH_DisableHook(m_target); result != MH_OK)
-			throw std::runtime_error(fmt::format("({}) Failed to MH_DisableHook '{}'", static_cast<int>(result)).c_str(), m_name);
+			throw std::runtime_error(fmt::format("({}) Failed to MH_DisableHook '{}'", static_cast<int>(result), m_name).c_str());
 		m_disabled = true;
 		spdlog::info("Disabled Hook '{}'", m_name);
 	}
