@@ -168,6 +168,7 @@
     <ClInclude Include="memory\Module.h" />
     <ClInclude Include="memory\Pattern.h" />
     <ClInclude Include="Pointers.h" />
+    <ClInclude Include="render\Gui.h" />
     <ClInclude Include="render\Renderer.h" />
     <ClInclude Include="utils\Utility.h" />
     <ClInclude Include="utils\Singleton.h" />

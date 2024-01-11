@@ -71,5 +71,8 @@
     <ClInclude Include="render\Renderer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="render\Gui.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,6 +23,8 @@ Renderer::Renderer() {
 	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
 	assert(ImGui_ImplDX11_Init(m_pD3dDevice, m_pD3dDeviceContext));
 	//assert(ImGui_ImplDX11_CreateDeviceObjects());
+
+	m_gui = Singleton<Gui>::initialize();
 }
 
 Renderer::~Renderer() {
@@ -31,6 +33,7 @@ Renderer::~Renderer() {
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 	this->ReleaseRenderView();
+	Singleton<Gui>::destroy();
 }
 
 //void Renderer::init_dx(IDXGISwapChain * pswapchain) {
@@ -43,10 +46,7 @@ void Renderer::on_present() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	/**/
-	static bool show = true;
-	ImGui::ShowDemoWindow(&show);
-	/**/
+	m_gui->display();
 
 	// Rendering
 	ImGui::Render();

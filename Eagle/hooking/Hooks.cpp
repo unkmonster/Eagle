@@ -24,7 +24,7 @@ HRESULT WINAPI Hooks::Present(IDXGISwapChain* ths, UINT SyncInterval, UINT Flags
 	static std::once_flag flag;
 	std::call_once(flag, [ths]() {Renderer::chain_pms.set_value(ths);});
 
-	if (Singleton<Renderer>::initialize())
+	if (gRenderer)
 		gRenderer->on_present();	// must be not nullptr
 
 	return gHookManager->Present.call_origin(ths, SyncInterval, Flags);
