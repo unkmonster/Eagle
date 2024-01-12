@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <mutex>
 #include <stdexcept>
+#include <thread>
 
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
@@ -32,7 +33,6 @@ HRESULT __stdcall Hooks::ResizeBuffers(
 	DXGI_FORMAT NewFormat, 
 	UINT SwapChainFlags
 ) {
-	SPDLOG_DEBUG("");
 	gRenderer->ReleaseRenderView();
 	//ImGui_ImplDX11_CreateDeviceObjects();
 
@@ -53,5 +53,21 @@ HRESULT __stdcall Hooks::ResizeBuffers(
 LRESULT CALLBACK Hooks::WNDPROC(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam))
 		return true;
+
+	switch (msg) {
+	case WM_KEYDOWN:
+		if (wParam == VK_INSERT)
+			global.m_showMenu ^= 1;
+		else if (wParam == VK_END)
+			std::thread(FreeLibrary, global.m_thisModule).detach();
+			//global.m_running = false;
+		break;
+
+	case WM_LBUTTONDBLCLK:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+		if (global.m_showMenu)
+			return 0;
+	}
 	return CallWindowProcA(gPointers->oWndproc, hwnd, msg, wParam, lParam);
 }

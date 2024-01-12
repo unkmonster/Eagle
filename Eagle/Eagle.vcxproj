@@ -153,8 +153,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="Global.cpp" />
     <ClCompile Include="hooking\Hooks.cpp" />
+    <ClCompile Include="render\Gui.cpp" />
     <ClCompile Include="render\Renderer.cpp" />
     <ClCompile Include="utils\Utility.cpp" />
     <ClCompile Include="utils\Singleton.cpp" />

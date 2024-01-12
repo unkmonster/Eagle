@@ -1,6 +1,10 @@
- #pragma once
+#pragma once
+
 #include <Windows.h>
 
-extern struct Global {
-	HMODULE dllModule;
-} global;
+inline struct Global {
+	HMODULE m_thisModule;
+	bool m_running;
+
+	bool m_showMenu{true};
+} global{};

@@ -23,20 +23,23 @@ DWORD Launcher(LPVOID param) {
 		gPointers = Singleton<Pointers>::initialize();
 		gRenderer = Singleton<Renderer>::initialize();
 		gHookManager = Singleton<HookManager>::initialize();
-		
-		while (!(GetAsyncKeyState(VK_END) & 0x1))
-			std::this_thread::sleep_for(1ms);
+		global.m_running = true;
+		return 0;
+		/*while (global.m_running)
+			std::this_thread::sleep_for(1ms);*/
 	} catch (std::runtime_error& err) {
-		MessageBoxA(NULL, err.what(), __func__, MB_ICONWARNING);
+		MessageBoxA(
+			NULL, 
+			fmt::format("Launch Error\n{}", err.what()).c_str(), 
+			PROJECTNAME, MB_ICONWARNING);
+		return 1;
 	}
-	
-	FreeLibraryAndExitThread(global.dllModule, 0);
 }
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
 		DisableThreadLibraryCalls(hModule);
-		global.dllModule = hModule; // TODO
+		global.m_thisModule = hModule; // TODO
 
 		if (CreateThread(nullptr, NULL, Launcher, nullptr, 0, nullptr) == NULL) {
 			MessageBoxA(NULL, "Failed to create launch thread!", PROJECTNAME, MB_ICONERROR);

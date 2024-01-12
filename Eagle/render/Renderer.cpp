@@ -4,6 +4,7 @@
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
+#include "Gui.h"
 #include "Pointers.h"
 
 Renderer::Renderer() {
@@ -19,8 +20,6 @@ Renderer::Renderer() {
 	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
 	assert(ImGui_ImplDX11_Init(m_pD3dDevice, m_pD3dDeviceContext));
 	//assert(ImGui_ImplDX11_CreateDeviceObjects());
-
-	m_gui = Singleton<Gui>::initialize();
 }
 
 Renderer::~Renderer() {
@@ -29,7 +28,6 @@ Renderer::~Renderer() {
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 	ReleaseRenderView();
-	Singleton<Gui>::destroy();
 }
 
 //void Renderer::init_dx(IDXGISwapChain * pswapchain) {
@@ -42,7 +40,8 @@ void Renderer::on_present() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	m_gui->display();
+	if (global.m_showMenu)
+		Gui::DrawMenu();
 
 	// Rendering
 	ImGui::Render();
