@@ -6,13 +6,9 @@
 
 #include "Pointers.h"
 
-std::promise<IDXGISwapChain*> Renderer::chain_pms;
-
 Renderer::Renderer() {
-	m_pDXGISwapChain = chain_pms.get_future().get();
-	CreateRenderView();
+	CreateRenderView(gPointers->pSwapChain);
 	
-
 	ImGui::CreateContext();
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -32,7 +28,7 @@ Renderer::~Renderer() {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-	this->ReleaseRenderView();
+	ReleaseRenderView();
 	Singleton<Gui>::destroy();
 }
 

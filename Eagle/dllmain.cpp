@@ -20,8 +20,8 @@ DWORD Launcher(LPVOID param) {
 	try {
 		gLogger = Singleton<Logger>::initialize();
 		gPointers = Singleton<Pointers>::initialize();
-		gHookManager = Singleton<HookManager>::initialize();
 		gRenderer = Singleton<Renderer>::initialize();
+		gHookManager = Singleton<HookManager>::initialize();
 		
 		while (!(GetAsyncKeyState(VK_END) & 0x1))
 			std::this_thread::sleep_for(1ms);

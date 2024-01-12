@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <cassert>
+#include <typeinfo>
 
 #include "utils/Utility.h"
 #include "Logger.h"
@@ -18,26 +19,29 @@ public:
 	Module mdxgi;
 	Module mGameOverLay;
 
-	// Functions
-	// method of DXGISwapChain
-	PVOID fPresent;
-	PVOID fResizeBuffers;
-
 	WNDPROC oWndproc;
 	HWND hwnd;
+
+	// method of DXGISwapChain
+	IDXGISwapChain* pSwapChain;
+	// Functions
+	PVOID fPresent;
+	PVOID fResizeBuffers;
 private:
 	Pointers():
 		// Modules
 		main("Main", GetModuleHandleA(nullptr)),
 		mdxgi("dxgi.dll"),
-		mGameOverLay("gameoverlayrenderer64.dll")
+		mGameOverLay("gameoverlayrenderer64.dll") 
 	{
 		assert(hwnd = FindWindow(TEXT("Battlefield™ 1"), nullptr));
 		assert(oWndproc = reinterpret_cast<WNDPROC>(GetWindowLongPtrA(hwnd, GWLP_WNDPROC)));
 		
+		pSwapChain = Pattern("48 8B 0D ? ? ? ? 48 8B D8 4C 89 71 18", typeid(pSwapChain).name()).
+			find(mGameOverLay).add(3).rip().as<Pointer&>().add(0x18).as<IDXGISwapChain*&>();
+		
 		// Functions
-		fPresent = Pattern("48 89 6C 24 18 48 89 74 24 20 41 56 48 83 EC 20 41 8B E8", 
-			"IDXGISwapChain::Present").find(mGameOverLay).as<PVOID>();
+		assert(fPresent = mdxgi.add(0x347C0).as<PVOID>());
 		assert(fResizeBuffers = mdxgi.add(0x23820).as<PVOID>());
 	}
 };

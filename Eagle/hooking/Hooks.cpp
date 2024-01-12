@@ -21,12 +21,7 @@ HMODULE WINAPI Hooks::LoadLibraryA(LPCSTR lpLibFileName) {
 
 // IDXGISwapChain
 HRESULT WINAPI Hooks::Present(IDXGISwapChain* ths, UINT SyncInterval, UINT Flags) {
-	static std::once_flag flag;
-	std::call_once(flag, [ths]() {Renderer::chain_pms.set_value(ths);});
-
-	if (gRenderer)
-		gRenderer->on_present();	// must be not nullptr
-
+	gRenderer->on_present();	// must be not nullptr
 	return gHookManager->Present.call_origin(ths, SyncInterval, Flags);
 }
 
@@ -38,14 +33,6 @@ HRESULT __stdcall Hooks::ResizeBuffers(
 	UINT SwapChainFlags
 ) {
 	SPDLOG_DEBUG("");
-
-	if (!gRenderer)
-		return gHookManager->ResizeBuffers.call_origin(
-			ths, BufferCount,
-			Width, Height,
-			NewFormat, SwapChainFlags
-	);
-
 	gRenderer->ReleaseRenderView();
 	//ImGui_ImplDX11_CreateDeviceObjects();
 
@@ -56,7 +43,7 @@ HRESULT __stdcall Hooks::ResizeBuffers(
 	);
 	
 	if (SUCCEEDED(rst)) {
-		gRenderer->CreateRenderView();
+		gRenderer->CreateRenderView(gPointers->pSwapChain);
 		//ImGui_ImplDX11_InvalidateDeviceObjects();
 	}
 	return rst;
