@@ -30,7 +30,7 @@ public:
 private:
 	Pointers():
 		// Modules
-		main("Main", GetModuleHandleA(nullptr)),
+		main(GetModuleHandleA(nullptr)),
 		mdxgi("dxgi.dll"),
 		mGameOverLay("gameoverlayrenderer64.dll") 
 	{

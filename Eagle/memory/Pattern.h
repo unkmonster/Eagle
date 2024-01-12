@@ -26,24 +26,24 @@ public:
 	}
 
 	Pointer find(const Module& m) {
-		static auto match = [](Pattern::SIGNATURE sign, BYTE* begin) -> bool {
-			for (int i = 0; i < sign.size(); ++i) {
-				if (sign[i] && sign[i].value() != begin[i])
-					return false;
+		auto begin = m.as<uint8_t*>();
+		auto end = begin + m.size();
+		while (begin < end) {
+			bool match{true};
+			for (auto x : m_sign) {
+				if (x && *x != *begin) {
+					match = false;
+					++begin;
+					break;
+				}
+				++begin;
 			}
-			return true;
-		};
-
-		auto module_size = m.size();
-		auto pattern_size = m_sign.size();
-		for (std::size_t i = 0; i < module_size; ++i) {
-			if (match(m_sign, m.as<BYTE*>() + i)) {
-				spdlog::info("Found '{}' at {}+0x{:X}", m_name, m.name(), i);
-				return m.as<BYTE*>() + i;
-			}
+			if (match) {
+				spdlog::info("Found '{}' at {}+0x{:X}", m_name, m.name(), uintptr_t(begin - m_sign.size() - m.as<uint8_t*>()));
+				return begin - m_sign.size();
+			}	
 		}
-		spdlog::warn("Unable to find pattern '{}' in <{}>", m_name, m.name());
-		return nullptr;
+		throw std::runtime_error(fmt::format("Unable to find pattern '{}' in <{}>", m_name, m.name()));
 	}
 private:
 	SIGNATURE m_sign;

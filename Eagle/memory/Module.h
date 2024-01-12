@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <string>
 #include <type_traits>
+#include <filesystem>
 
 #include "utils/Utility.h"
 
@@ -49,7 +50,7 @@ public:
 	template <typename T>
 	Module(const std::string& name, T addr):
 		Pointer(addr), 
-		m_name(name),
+		m_path(name),
 		m_size(GetModuleLength(addr))
 	{}
 
@@ -57,10 +58,21 @@ public:
 		Module(name, GetModuleHandleA(name.c_str()))
 	{}
 
-	auto name() const { return m_name; }
+	explicit Module(const char* name) : Module(std::string(name)) {}
+
+	template <typename T>
+	explicit Module(T addr): Module("", addr) {
+		char buffer[MAX_PATH]{};
+		assert(GetModuleFileNameA(as<HMODULE>(), buffer, MAX_PATH));
+		m_path.assign(buffer);
+	}
+
+	auto name() const { return m_path.filename().string(); }
 
 	auto size() const { return m_size; }
+
+	auto path() const { return m_path; }
 private:
-	std::string m_name;
 	std::size_t m_size;
+	std::filesystem::path m_path;
 };

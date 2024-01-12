@@ -6,6 +6,7 @@
 
 #include <MinHook.h>
 
+#include "common.h"
 #include "Global.h"
 #include "utils/Utility.h"
 #include "Utils/Singleton.h"
@@ -38,7 +39,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 		global.dllModule = hModule; // TODO
 
 		if (CreateThread(nullptr, NULL, Launcher, nullptr, 0, nullptr) == NULL) {
-			MessageBoxA(NULL, "Failed to create launch thread!", NULL, MB_ICONERROR);
+			MessageBoxA(NULL, "Failed to create launch thread!", PROJECTNAME, MB_ICONERROR);
 			return FALSE;
 		}
 	} else if (reason == DLL_PROCESS_DETACH) {
