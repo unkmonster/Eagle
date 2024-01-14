@@ -39,21 +39,21 @@ class Logger {
 		}
 
 		// Setting Sink
-		auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-		console_sink->set_level(spdlog::level::debug);
-
-		auto msvc_sink = std::make_shared<spdlog::sinks::msvc_sink_mt>(false);
-		msvc_sink->set_level(spdlog::level::debug);
-
 		spdlog::sinks_init_list sinks{
-			console_sink,
-			msvc_sink
+			std::make_shared<spdlog::sinks::stdout_color_sink_mt>(),
+#ifdef _DEBUG
+			std::make_shared<spdlog::sinks::msvc_sink_mt>(false)
+#endif // _DEBUG
 		};
 
 		// Setting Logger 
 		auto logger = std::make_shared<spdlog::logger>("deflogger", sinks.begin(), sinks.end());
+#ifdef _DEBUG
 		logger->set_level(spdlog::level::debug);
-		logger->set_pattern("%Y-%m-%d %T [%^%l%$] <%!:%#> -- %v");
+#else
+		logger->set_level(spdlog::level::info);
+#endif // _DEBUG
+		logger->set_pattern("[%Y-%m-%d %T.%e] [%s:%#] %^%l%$ %v");
 		spdlog::set_default_logger(logger);
 	}
 public:

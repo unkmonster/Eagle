@@ -152,6 +152,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bf-1\Frosbite.cpp" />
+    <ClCompile Include="bf-1\Obfuscationmanager.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hooking\Hooks.cpp" />
     <ClCompile Include="render\Gui.cpp" />
@@ -160,6 +162,9 @@
     <ClCompile Include="utils\Singleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bf-1\Vec.h" />
+    <ClInclude Include="bf-1\Frosbite.h" />
+    <ClInclude Include="bf-1\Obfuscationmgr.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="hooking\HookManager.h" />

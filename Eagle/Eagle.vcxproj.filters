@@ -33,6 +33,12 @@
     <ClCompile Include="render\Gui.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="bf-1\Frosbite.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bf-1\Obfuscationmanager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hooking\minhookcpp.h">
@@ -72,6 +78,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="render\Gui.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bf-1\Obfuscationmgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bf-1\Frosbite.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bf-1\Vec.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
