@@ -8,7 +8,7 @@
 #define NOD3DX9
 
 #ifdef NOD3DX9
-#include "Vec.h"
+#include "math/Vector.h"
 using D3DXMATRIXA16 = Matrix16;
 using D3DXVECTOR4 = Vec4;
 using D3DXVECTOR3 = Vec3;

@@ -2,4 +2,5 @@
 
 namespace Gui {
 void DrawMenu();
+void DrawDebugMenu();
 }

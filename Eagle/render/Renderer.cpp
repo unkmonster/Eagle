@@ -42,6 +42,7 @@ void Renderer::on_present() {
 
 	if (global.m_showMenu)
 		Gui::DrawMenu();
+	Gui::DrawDebugMenu();
 
 	// Rendering
 	ImGui::Render();

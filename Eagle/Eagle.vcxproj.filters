@@ -86,7 +86,13 @@
     <ClInclude Include="bf-1\Frosbite.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="bf-1\Vec.h">
+    <ClInclude Include="math\Vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Setting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
