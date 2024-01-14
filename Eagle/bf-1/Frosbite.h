@@ -1,8 +1,10 @@
 #pragma once
 
 #include <Windows.h>
+#include <cassert>
 #include <cstdint>
 
+#include <imgui.h>
 #define NOD3DX9
 
 #ifdef NOD3DX9
@@ -414,4 +416,40 @@ enum BoneIds {
     BONE_LeftFoot = 0x115,
     BONE_RightFoot = 0x123
 };
+
+inline bool w2s(Vec3* in, Vec2* out) {
+    auto renderer = GameRenderer::GetInstance();
+    assert(ValidPointer(renderer));
+    assert(ValidPointer(renderer->renderView));
+    auto pViewProjection = &renderer->renderView->viewProj;
+
+    float w = pViewProjection->data[0][3] * in->x + pViewProjection->data[1][3] * in->y + pViewProjection->data[2][3] * in->z + pViewProjection->data[3][3];
+    if (w < 0.01)
+        return false;
+
+    out->x = 
+        pViewProjection->data[0][0] * in->x +
+        pViewProjection->data[1][0] * in->y +
+        pViewProjection->data[2][0] * in->z +
+        pViewProjection->data[3][0];
+    out->y = 
+        pViewProjection->data[0][1] * in->x +
+        pViewProjection->data[1][1] * in->y +
+        pViewProjection->data[2][1] * in->z +
+        pViewProjection->data[3][1];
+
+    float invw = 1.0f / w;
+    out->x *= invw;
+    out->y *= invw;
+
+    float width = ImGui::GetIO().DisplaySize.x, height = ImGui::GetIO().DisplaySize.y;
+    float x = width / 2.f;
+    float y = height / 2.f;
+
+    x += 0.5f * out->x * width + 0.5f;
+    y -= 0.5f * out->y * height + 0.5f;
+    out->x = x;
+    out->y = y;
+    return true;
 }
+} // fb

@@ -3,12 +3,15 @@
 #include "Frosbite.h"
 
 #include <utility>
+#include <cstdint>
+
 typedef DWORD64 QWORD;
 typedef QWORD _QWORD;
 
 typedef BYTE _BYTE;
 typedef DWORD _DWORD;
 typedef WORD _WORD;
+
 
 
 template<typename T>
@@ -36,3 +39,14 @@ hashtable_iterator<_QWORD>* __fastcall hashtable_find(hashtable<_QWORD>* table, 
 
 fb::ClientPlayer* GetPlayerById(int id);
 fb::ClientPlayer* GetLocalPlayer(void);
+
+class ObfuscationMgr {
+	static ObfuscationMgr* GetInstance() {
+		return *reinterpret_cast<ObfuscationMgr**>(OFFSET_ObfuscationMgr);
+	}
+public:
+	char pad_0000[0x8];				// 0x0
+	hashtable<uint64_t>* hashTable;	// 0x8
+	char pad_0016[0x60];			// 0x10
+	uint64_t playerListXor;			// 0x70
+};
