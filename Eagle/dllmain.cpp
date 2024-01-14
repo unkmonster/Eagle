@@ -1,6 +1,9 @@
 #include <Windows.h>
-
 #include <thread>
+#include <filesystem>
+
+#include "bf-1/Frosbite.h"
+#include "bf-1/Obfuscationmgr.h"
 
 #include "common.h"
 #include "Global.h"
@@ -9,6 +12,7 @@
 #include "Logger.h"
 #include "Pointers.h"
 #include "render/Renderer.h"
+#include "FileManager.h"
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
@@ -19,10 +23,16 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 			std::thread([]() {
 				try {
 					gLogger = Singleton<Logger>::initialize();
+
+					char buffer[MAX_PATH]{};
+					GetEnvironmentVariableA("appdata", buffer, MAX_PATH);
+					gFileManager = Singleton<CFileManager>::initialize((std::filesystem::path(buffer) / "Eagle"));
+					if (std::filesystem::exists(gFileManager->m_setting_bin))
+						CFileManager::load(gFileManager->m_setting_bin, &global.m_setting);
+
 					gPointers = Singleton<Pointers>::initialize();
 					gRenderer = Singleton<Renderer>::initialize();
 					gHookManager = Singleton<HookManager>::initialize();
-					global.m_running = true;
 				} catch (std::runtime_error& err) {
 					MessageBoxA(
 						NULL,
@@ -38,6 +48,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 		Singleton<HookManager>::destroy();
 		Singleton<Renderer>::destroy();
 		Singleton<Pointers>::destroy();
+		CFileManager::dump(gFileManager->m_setting_bin, &global.m_setting);
 		Singleton<Logger>::destroy();
 	}
 	return TRUE;

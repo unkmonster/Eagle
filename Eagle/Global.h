@@ -2,9 +2,12 @@
 
 #include <Windows.h>
 
+#include "Setting.h"
+
 inline struct Global {
 	HMODULE m_thisModule;
-	bool m_running;
+
+	Setting m_setting;
 
 	bool m_showMenu{true};
 } global{};
