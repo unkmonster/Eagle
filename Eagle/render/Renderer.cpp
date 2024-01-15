@@ -6,6 +6,8 @@
 
 #include "Gui.h"
 #include "Pointers.h"
+#include "feature/PlayerManager.h"
+#include "FileManager.h"
 
 Renderer::Renderer() {
 	CreateRenderView(gPointers->pSwapChain);
@@ -14,6 +16,7 @@ Renderer::Renderer() {
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Roboto-Medium.ttf").string().c_str(), 14.f);
 	ImGui::StyleColorsDark();
 
 	// Setup Platform/Renderer backends
@@ -40,9 +43,12 @@ void Renderer::on_present() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	if (global.m_showMenu)
+	if (global.m_showMenu) {
 		Gui::DrawMenu();
-	Gui::DrawDebugMenu();
+		Gui::DrawDebugMenu();
+	}
+
+	gPlayerManager->run();
 
 	// Rendering
 	ImGui::Render();

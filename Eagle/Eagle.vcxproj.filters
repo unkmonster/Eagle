@@ -39,6 +39,12 @@
     <ClCompile Include="bf-1\Obfuscationmanager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="feature\PlayerManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="render\Sprite2d.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hooking\minhookcpp.h">
@@ -93,6 +99,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="FileManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="feature\PlayerManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="render\Sprite2d.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

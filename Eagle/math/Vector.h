@@ -10,8 +10,12 @@ struct Vec2 {
 	Vec2() = default;
 	Vec2(float a, float b): x(a), y(b) {}
 	
-	explicit operator ImVec2() const {
+	operator ImVec2() const {
 		return ImVec2(x, y);
+	}
+
+	Vec2 operator+ (const Vec2& rhs) const {
+		return {x + rhs.x, y + rhs.y};
 	}
 };
 struct Vec3: public Vec2 {
@@ -19,12 +23,21 @@ struct Vec3: public Vec2 {
 
 	Vec3() = default;
 	Vec3(float x_, float y_, float z_): Vec2(x_, y_), z(z_) {}
+	Vec3(const Vec2& v, float z_): Vec2(v), z(z_) {}
+
+	Vec3 operator+ (const Vec3& rhs) const {
+		return Vec3(this->Vec2::operator+(rhs), z + rhs.z);
+	}
 };
 
 struct Vec4 : public Vec3 {
 	float w{};
 	Vec4() = default;
 	Vec4(float x_, float y_, float z_, float w_): Vec3(x_, y_, z_), w(w_) {}
+
+	operator ImVec4() const {
+		return ImVec4(x, y, z, w);
+	}
 };
 
 struct Matrix16 {

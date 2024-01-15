@@ -13,6 +13,7 @@
 #include "Pointers.h"
 #include "render/Renderer.h"
 #include "FileManager.h"
+#include "feature/PlayerManager.h"
 
 BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
@@ -27,12 +28,16 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 					char buffer[MAX_PATH]{};
 					GetEnvironmentVariableA("appdata", buffer, MAX_PATH);
 					gFileManager = Singleton<CFileManager>::initialize((std::filesystem::path(buffer) / "Eagle"));
-					if (std::filesystem::exists(gFileManager->m_setting_bin))
+					if (std::filesystem::exists(gFileManager->m_setting_bin)) {
 						CFileManager::load(gFileManager->m_setting_bin, &global.m_setting);
-
+						SPDLOG_INFO("Loaded setting from disk");
+					}
+						
 					gPointers = Singleton<Pointers>::initialize();
 					gRenderer = Singleton<Renderer>::initialize();
 					gHookManager = Singleton<HookManager>::initialize();
+					gPlayerManager = Singleton<PlayerManager>::initialize();
+
 				} catch (std::runtime_error& err) {
 					MessageBoxA(
 						NULL,

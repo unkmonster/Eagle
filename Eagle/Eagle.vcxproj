@@ -155,13 +155,16 @@
     <ClCompile Include="bf-1\Frosbite.cpp" />
     <ClCompile Include="bf-1\Obfuscationmanager.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="feature\PlayerManager.cpp" />
     <ClCompile Include="hooking\Hooks.cpp" />
     <ClCompile Include="render\Gui.cpp" />
     <ClCompile Include="render\Renderer.cpp" />
+    <ClCompile Include="render\Sprite2d.cpp" />
     <ClCompile Include="utils\Utility.cpp" />
     <ClCompile Include="utils\Singleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="feature\PlayerManager.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="bf-1\Frosbite.h" />
     <ClInclude Include="bf-1\Obfuscationmgr.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="Pointers.h" />
     <ClInclude Include="render\Gui.h" />
     <ClInclude Include="render\Renderer.h" />
+    <ClInclude Include="render\Sprite2d.h" />
     <ClInclude Include="Setting.h" />
     <ClInclude Include="utils\Utility.h" />
     <ClInclude Include="utils\Singleton.h" />

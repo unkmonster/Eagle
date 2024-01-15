@@ -20,13 +20,20 @@ using D3DXVECTOR3 = Vec3;
 #define OFFSET_ObfuscationMgr 0x14351D058
 #define OFFSET_CLIENTGAMECONTEXT 0x1437F7758
 #define OFFSET_GAMERENDERER 0x1439e6d08
-#define ResolveRelativePtr(Address) ((ULONG_PTR)(Address) + *(__int32*)(Address) + sizeof(__int32))
 #define ValidPointer( pointer ) ( pointer != NULL && (DWORD_PTR)pointer >= 0x10000 && (DWORD_PTR)pointer < 0x00007FFFFFFEFFFF /*&& some other checks*/ )
 void* DecryptPointer(DWORD64 EncryptedPtr, DWORD64 PointerKey);
 
 
 namespace fb
 {
+inline Vec3 Mat3Vec(const Matrix16& matrix, const Vec3& vec) {
+    return {
+        matrix.data[0][0] * vec.x + matrix.data[0][1] * vec.x + matrix.data[0][2] * vec.x,
+        matrix.data[1][0] * vec.y + matrix.data[1][1] * vec.y + matrix.data[1][2] * vec.y,
+       matrix.data[2][0] * vec.z + matrix.data[2][1] * vec.z + matrix.data[2][2] * vec.z
+    };
+}
+
 template <class T, INT Count, INT PadSize>
 class fixed_vector {
 public:
@@ -196,8 +203,8 @@ public:
 typedef D3DXMATRIXA16 LinearTransform;
 class AxisAlignedBox {
 public:
-    D3DXVECTOR4 Min;
-    D3DXVECTOR4 Max;
+    D3DXVECTOR4 min;
+    D3DXVECTOR4 max;
 };
 
 struct LinearTransform_AABB {
@@ -268,6 +275,8 @@ public:
     virtual void Function23(); // 
     virtual void Function24();
     virtual void GetTransformAABB(LinearTransform_AABB& mTransform);// 26
+    virtual void GetTransform(Matrix16* mTransform);
+
     HealthComponent* GetHealthComponent() {
         return *(HealthComponent**)((BYTE*)this + 0x1D0);
     };
@@ -275,6 +284,28 @@ public:
     VehicleEntityData* GetEntityData() {
         return *(VehicleEntityData**)((BYTE*)this + 0x30);
     };
+
+    Vec3 GetVehiclePosition() {
+        LinearTransform_AABB _AABB;
+        Matrix16 _Transform;
+        GetTransform(&_Transform);
+        Vec3 Position = Vec3(_Transform.data[3][0], _Transform.data[3][1], _Transform.data[3][2]);
+        Vec3 glmPos = Vec3(Position.x, Position.y, Position.z);
+
+        GetTransformAABB(_AABB);
+        Vec3 min = Vec3(_AABB.m_Box.min.x, _AABB.m_Box.min.y, _AABB.m_Box.min.z);
+        Vec3 max = Vec3(_AABB.m_Box.max.x, _AABB.m_Box.max.y, _AABB.m_Box.max.z);
+
+        Matrix16 TransformMatrix{_Transform.data[0][0], _Transform.data[1][0], _Transform.data[2][0], 0,
+                                    _Transform.data[0][1], _Transform.data[1][1], _Transform.data[2][1], 0,
+                                        _Transform.data[0][2], _Transform.data[1][2], _Transform.data[2][2], 0};
+
+
+        min = glmPos + Mat3Vec(TransformMatrix, min);
+        max = glmPos + Mat3Vec(TransformMatrix, max);
+
+        return Vec3(min.x, min.y, min.z);
+    }
 }; //Size: 0x0048
 
 class UpdatePoseResultData {
@@ -336,18 +367,18 @@ public:
         AxisAlignedBox aabb = AxisAlignedBox();
         if (this->poseType == 0) // standing
         {
-            aabb.Min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
-            aabb.Max = D3DXVECTOR4(0.350000f, 1.700000f, 0.350000f, 0);
+            aabb.min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
+            aabb.max = D3DXVECTOR4(0.350000f, 1.700000f, 0.350000f, 0);
         }
         if (this->poseType == 1) // crouching
         {
-            aabb.Min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
-            aabb.Max = D3DXVECTOR4(0.350000f, 1.150000f, 0.350000f, 0);
+            aabb.min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
+            aabb.max = D3DXVECTOR4(0.350000f, 1.150000f, 0.350000f, 0);
         }
         if (this->poseType == 2) // prone
         {
-            aabb.Min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
-            aabb.Max = D3DXVECTOR4(0.350000f, 0.400000f, 0.350000f, 0);
+            aabb.min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
+            aabb.max = D3DXVECTOR4(0.350000f, 0.400000f, 0.350000f, 0);
         }
         return aabb;
     }
@@ -359,11 +390,11 @@ public:
 class ClientPlayer {
 public:
     virtual ~ClientPlayer();
-    virtual DWORD_PTR GetCharacterEntity(); //=> ClientSoldierEntity + 0x268 
-    virtual DWORD_PTR GetCharacterUserData(); //=> PlayerCharacterUserData
-    virtual class EntryComponent* GetEntryComponent();
-    virtual bool InVehicle();
-    virtual unsigned int getId();
+    virtual DWORD_PTR GetCharacterEntity() const; //=> ClientSoldierEntity + 0x268 
+    virtual DWORD_PTR GetCharacterUserData() const; //=> PlayerCharacterUserData
+    virtual class EntryComponent* GetEntryComponent() const;
+    virtual bool InVehicle() const;
+    virtual unsigned int getId() const;
     char _0x0008[16];
     char* name; //0x0018
     char pad_0020[32]; //0x0020
