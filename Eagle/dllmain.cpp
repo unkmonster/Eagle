@@ -30,14 +30,13 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 					gFileManager = Singleton<CFileManager>::initialize((std::filesystem::path(buffer) / "Eagle"));
 					if (std::filesystem::exists(gFileManager->m_setting_bin)) {
 						CFileManager::load(gFileManager->m_setting_bin, &global.m_setting);
-						SPDLOG_INFO("Loaded setting from disk");
+						SPDLOG_INFO("Loaded Setting from disk");
 					}
 						
 					gPointers = Singleton<Pointers>::initialize();
 					gRenderer = Singleton<Renderer>::initialize();
 					gHookManager = Singleton<HookManager>::initialize();
 					gPlayerManager = Singleton<PlayerManager>::initialize();
-
 				} catch (std::runtime_error& err) {
 					MessageBoxA(
 						NULL,

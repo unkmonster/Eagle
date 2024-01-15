@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-#include <imgui.h>
+
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
@@ -16,8 +16,10 @@ Renderer::Renderer() {
 
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Roboto-Medium.ttf").string().c_str(), 14.f);
 	ImGui::StyleColorsDark();
+
+	m_menuFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Roboto-Medium.ttf").string().c_str(), m_fontSize);
+	m_textFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Spiegel_TT_SemiBold.ttf").string().c_str(), m_fontSize);
 
 	// Setup Platform/Renderer backends
 	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
@@ -32,10 +34,6 @@ Renderer::~Renderer() {
 	ImGui::DestroyContext();
 	ReleaseRenderView();
 }
-
-//void Renderer::init_dx(IDXGISwapChain * pswapchain) {
-//
-//}
 
 void Renderer::on_present() {
 	// Start the Dear ImGui frame

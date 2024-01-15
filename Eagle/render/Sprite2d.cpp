@@ -36,3 +36,18 @@ void CSprite2d::DrawCornerRectOutline(const Vec2 & p1, float w, float h, uint32_
 	DrawOutline({p2.x, p1.y}, {p2.x, p1.y + h * temp}, color);
 	DrawOutline(p2, {p2.x, p2.y - h * temp}, color);
 }
+
+void CSprite2d::DrawTextOutline(const Vec2 & pos, const std::string& text, const ImFont * font, float size, uint32_t color) {
+	auto dl = ImGui::GetForegroundDrawList();
+
+	dl->AddText(font, size, {pos.x - 1, pos.y - 1}, 0xFF000000, text.c_str());
+	dl->AddText(font, size, {pos.x + 1, pos.y - 1}, 0xFF000000, text.c_str());
+	dl->AddText(font, size, {pos.x - 1, pos.y + 1}, 0xFF000000, text.c_str());
+	dl->AddText(font, size, {pos.x + 1, pos.y + 1}, 0xFF000000, text.c_str());
+
+	/*dl->AddText(font, size, {pos.x - 1, pos.y}, 0xFF000000, text.c_str());
+	dl->AddText(font, size, {pos.x + 1, pos.y}, 0xFF000000, text.c_str());
+	dl->AddText(font, size, {pos.x, pos.y + 1}, 0xFF000000, text.c_str());
+	dl->AddText(font, size, {pos.x, pos.y - 1}, 0xFF000000, text.c_str());*/
+	dl->AddText(font, size, pos, color, text.c_str());
+}

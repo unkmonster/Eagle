@@ -10,17 +10,25 @@
 
 #include "Logger.h"
 #include "Global.h"
+#include "feature/PlayerManager.h"
 
 void Gui::DrawMenu() {
 	ImGui::Begin(PROJECTNAME);
 	ImGui::Checkbox("Box", &global.m_setting.m_esp.m_showBox);
 	ImGui::SameLine();
-	ImGui::ColorEdit4("##Box", (float*)&global.m_setting.m_esp.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
+	ImGui::ColorEdit4("##regular", (float*)&global.m_setting.m_esp.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
+	ImGui::SameLine();
+	ImGui::ColorEdit4("Occluded", (float*)&global.m_setting.m_esp.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(80.f);
-	ImGui::Combo("##box", (int*)&global.m_setting.m_esp.m_boxType, "Full\0Corner\0");
+	ImGui::Combo("Type", (int*)&global.m_setting.m_esp.m_boxType, "Full\0Corner\0");
 
 	ImGui::Checkbox("name", &global.m_setting.m_esp.m_showName);
+	ImGui::SameLine();
+	ImGui::Checkbox("Health", &global.m_setting.m_esp.m_showHp);
+	ImGui::SameLine();
+	ImGui::Checkbox("Distance", &global.m_setting.m_esp.m_showDistance);
+
 	ImGui::End();
 }
 
@@ -49,6 +57,15 @@ void Gui::DrawDebugMenu() {
 				spdlog::debug("({}, {}, {})", pos.x, pos.y, pos.z);
 			}	
 		}
+	}
+
+	if (ImGui::Button("Local info")) {
+		spdlog::debug("LocalPlayer: 0x{:X}", (uintptr_t)gPlayerManager->m_localPlayer);
+		if (gPlayerManager->m_localPlayer) {
+			spdlog::debug("soldier: 0x{:X}", (uintptr_t)gPlayerManager->m_localPlayer->clientSoldierEntity);
+			spdlog::debug("vehicle: 0x{:X}", (uintptr_t)gPlayerManager->m_localPlayer->clientVehicleEntity);
+		}
+			
 	}
 
 	if (ImGui::Button("Unload")) 

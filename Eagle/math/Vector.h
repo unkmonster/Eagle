@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+#include <cmath>
 
 #include <imgui.h>
 
@@ -50,4 +51,8 @@ inline std::ostream& operator<<(std::ostream& os, const Vec3& vec) {
 
 inline std::ostream& operator<<(std::ostream& os, const Vec4& vec) {
 	return os << "(" << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << ")";
+}
+
+inline double distance(const Vec2& p1, const Vec2& p2) {
+	return sqrt(pow(fabs(p1.x - p2.x), 2) + pow(fabs(p1.y - p2.y), 2));
 }
