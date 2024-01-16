@@ -278,11 +278,16 @@ public:
     virtual void Function22(); //
     virtual void Function23(); // 
     virtual void Function24();
-    virtual void GetTransformAABB(LinearTransform_AABB& mTransform);// 26
-    virtual void GetTransform(Matrix16* mTransform);
-
-
+    virtual void GetTransformAABB(LinearTransform_AABB& mTransform) const;// 26
+    virtual void GetTransform(Matrix16* mTransform) const;
+public:
+    Vec3 GetOrigin() const {
+        Matrix16 matrix;
+        this->GetTransform(&matrix);
+        return matrix.data[3];
+    }
 };
+
 class ClientVehicleEntity: public ClientEntity {
 public:
     HealthComponent* GetHealthComponent() {
@@ -492,24 +497,24 @@ inline bool w2s(Vec3* in, Vec2* out) {
     return true;
 }
 
-inline bool GetBoxPosition(const LinearTransform_AABB& aabb, std::vector<Vec2>& points, std::pair<Vec2, Vec2>& minmax) {
+inline bool GetBoxPosition(const LinearTransform_AABB& aabb, std::vector<Vec2>& points, std::pair<Vec2, Vec2>& minmax, Vec3& origin) {
     const Vec3& min = aabb.m_Box.min;
     const Vec3& max = aabb.m_Box.max;
-    const Vec3& pos = aabb.m_Transform.data[3];
+    origin = aabb.m_Transform.data[3];
     const std::size_t size = 8;
 
     // ªÒ»° 3d ∂•µ„
     std::vector<Vec3> apexes;
     apexes.reserve(size);
-    apexes.emplace_back(pos + min * aabb.m_Transform);
-    apexes.emplace_back(pos + max * aabb.m_Transform);
-    apexes.emplace_back(pos + Vec3{min.x, min.y, max.z} *aabb.m_Transform);
-    apexes.emplace_back(pos + Vec3{max.x, max.y, min.z} *aabb.m_Transform);
+    apexes.emplace_back(origin + min * aabb.m_Transform);
+    apexes.emplace_back(origin + max * aabb.m_Transform);
+    apexes.emplace_back(origin + Vec3{min.x, min.y, max.z} *aabb.m_Transform);
+    apexes.emplace_back(origin + Vec3{max.x, max.y, min.z} *aabb.m_Transform);
 
-    apexes.emplace_back(pos + Vec3{max.x, min.y, min.z} *aabb.m_Transform);
-    apexes.emplace_back(pos + Vec3{min.x, max.y, min.z} *aabb.m_Transform);
-    apexes.emplace_back(pos + Vec3{max.x, min.y, max.z} *aabb.m_Transform);
-    apexes.emplace_back(pos + Vec3{min.x, max.y, max.z} *aabb.m_Transform);
+    apexes.emplace_back(origin + Vec3{max.x, min.y, min.z} *aabb.m_Transform);
+    apexes.emplace_back(origin + Vec3{min.x, max.y, min.z} *aabb.m_Transform);
+    apexes.emplace_back(origin + Vec3{max.x, min.y, max.z} *aabb.m_Transform);
+    apexes.emplace_back(origin + Vec3{min.x, max.y, max.z} *aabb.m_Transform);
 
     // 3d -> 2d
     points.resize(size);
@@ -525,7 +530,6 @@ inline bool GetBoxPosition(const LinearTransform_AABB& aabb, std::vector<Vec2>& 
         return distance(lhs, Vec2{0, 0}) < distance(rhs, Vec2{0, 0});
     });
 
-    // temp test
     minmax.first = *result.first;
     minmax.second = *result.second;
     return true;

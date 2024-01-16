@@ -14,15 +14,31 @@
 
 void Gui::DrawMenu() {
 	ImGui::Begin(PROJECTNAME);
+
 	ImGui::Checkbox("Box", &global.m_setting.m_esp.m_showBox);
 	ImGui::SameLine();
+
 	ImGui::ColorEdit4("##regular", (float*)&global.m_setting.m_esp.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
+
 	ImGui::ColorEdit4("Occluded", (float*)&global.m_setting.m_esp.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
+
 	ImGui::SetNextItemWidth(80.f);
 	ImGui::Combo("Type", (int*)&global.m_setting.m_esp.m_boxType, "Full\0Corner\0Cube\0");
+	ImGui::SameLine();
 
+	ImGui::Checkbox("Status Line", &global.m_setting.m_esp.m_showStatusLine);
+	ImGui::SameLine();
+
+	ImGui::SetNextItemWidth(75.f);
+	ImGui::Combo("##Status Line Type", (int*)&global.m_setting.m_esp.m_statusLinePos, "Up\0Bottom\0");
+	ImGui::Separator();
+
+	ImGui::SetNextItemWidth(75.f);
+	ImGui::InputInt("Effective Distance", &global.m_setting.m_esp.m_effective, 25, 50);
+
+	ImGui::SeparatorText("Text Information");
 	ImGui::Checkbox("name", &global.m_setting.m_esp.m_showName);
 	ImGui::SameLine();
 	ImGui::Checkbox("Health", &global.m_setting.m_esp.m_showHp);

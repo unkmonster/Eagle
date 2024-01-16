@@ -55,3 +55,10 @@ void CSprite2d::DrawTextOutline(const Vec2 & pos, const std::string& text, const
 	dl->AddText(font, size, {pos.x, pos.y - 1}, 0xFF000000, text.c_str());*/
 	dl->AddText(font, size, pos, color, text.c_str());
 }
+
+void CSprite2d::DrawTextColumnOutline(Vec2 begin, const std::vector<std::string>& texts, const ImFont * font, float size, uint32_t color) {
+	for (const auto& x : texts) {
+		DrawTextOutline(begin, x, font, size, color);
+		begin.y += size;
+	}
+}
