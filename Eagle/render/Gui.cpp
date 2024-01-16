@@ -21,7 +21,7 @@ void Gui::DrawMenu() {
 	ImGui::ColorEdit4("Occluded", (float*)&global.m_setting.m_esp.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(80.f);
-	ImGui::Combo("Type", (int*)&global.m_setting.m_esp.m_boxType, "Full\0Corner\0");
+	ImGui::Combo("Type", (int*)&global.m_setting.m_esp.m_boxType, "Full\0Corner\0Cube\0");
 
 	ImGui::Checkbox("name", &global.m_setting.m_esp.m_showName);
 	ImGui::SameLine();
@@ -55,6 +55,9 @@ void Gui::DrawDebugMenu() {
 				spdlog::debug("Vehicle = 0x{:X}", (uintptr_t)vehicle);
 				auto pos = vehicle->GetVehiclePosition();
 				spdlog::debug("({}, {}, {})", pos.x, pos.y, pos.z);
+				fb::LinearTransform_AABB aabb;
+				vehicle->GetTransformAABB(aabb);
+				spdlog::debug("({}, {}, {})", aabb.m_Transform.data[3][0], aabb.m_Transform.data[3][1], aabb.m_Transform.data[3][2]);
 			}	
 		}
 	}

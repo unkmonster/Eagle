@@ -16,6 +16,10 @@ void CSprite2d::DrawRectOutline(const Vec2 & leftUp, float w, float h, uint32_t 
 	ImGui::GetForegroundDrawList()->AddRect(leftUp, rightDown, color, 0.f, 0, thickness);
 }
 
+void CSprite2d::DrawCornerRectOutline(const Vec2 & p1, const Vec2 & p2, uint32_t color, float thickness) {
+	DrawCornerRectOutline(p1, p2.x - p1.x, p2.y - p1.y, color, thickness);
+}
+
 void CSprite2d::DrawCornerRectOutline(const Vec2 & p1, float w, float h, uint32_t color, float thickness) {
 	const float temp = 0.25f;
 	Vec2 p2{p1.x + w, p1.y + h};

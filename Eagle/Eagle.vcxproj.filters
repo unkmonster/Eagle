@@ -107,5 +107,8 @@
     <ClInclude Include="render\Sprite2d.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="feature\Esp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

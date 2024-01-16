@@ -5,7 +5,8 @@
 
 enum BoxType {
 	BOX_FULL,
-	BOX_CORNER
+	BOX_CORNER,
+	BOX_3D
 };
 
 struct Setting {

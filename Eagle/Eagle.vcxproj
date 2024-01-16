@@ -164,6 +164,7 @@
     <ClCompile Include="utils\Singleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="feature\Esp.h" />
     <ClInclude Include="feature\PlayerManager.h" />
     <ClInclude Include="math\Vector.h" />
     <ClInclude Include="bf-1\Frosbite.h" />

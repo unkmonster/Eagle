@@ -3,8 +3,13 @@
 #include <Windows.h>
 #include <cassert>
 #include <cstdint>
+#include <string>
+#include <vector> 
+#include <algorithm>
 
 #include <imgui.h>
+  
+#include "render/Sprite2d.h"
 #define NOD3DX9
 
 #ifdef NOD3DX9
@@ -15,7 +20,6 @@ using D3DXVECTOR3 = Vec3;
 #else
 #include <d3dx9math.h>
 #endif // NOD3DX9
-
 
 #define OFFSET_ObfuscationMgr 0x14351D058
 #define OFFSET_CLIENTGAMECONTEXT 0x1437F7758
@@ -247,7 +251,7 @@ public:
     char pad_0300[7488]; //0x0300
 }; //Size: 0x2040
 
-class ClientVehicleEntity {
+class ClientEntity {
 public:
     virtual void Function0(); //
     virtual void Function1(); //
@@ -277,6 +281,10 @@ public:
     virtual void GetTransformAABB(LinearTransform_AABB& mTransform);// 26
     virtual void GetTransform(Matrix16* mTransform);
 
+
+};
+class ClientVehicleEntity: public ClientEntity {
+public:
     HealthComponent* GetHealthComponent() {
         return *(HealthComponent**)((BYTE*)this + 0x1D0);
     };
@@ -330,9 +338,9 @@ public:
     UpdatePoseResultData m_ragdollTransforms; //0x0000
 }; //Size: 0x0008
 
-class ClientSoldierEntity {
+class ClientSoldierEntity:public ClientEntity {
 public:
-    char pad_0000[464]; //0x0000
+    char pad_0000[456]; //0x0000
     HealthComponent* healthcomponent; //0x01D0
     char pad_01D8[696]; //0x01D8
     BoneCollisionComponent* bonecollisioncomponent; //0x0490
@@ -481,6 +489,45 @@ inline bool w2s(Vec3* in, Vec2* out) {
     y -= 0.5f * out->y * height + 0.5f;
     out->x = x;
     out->y = y;
+    return true;
+}
+
+inline bool GetBoxPosition(const LinearTransform_AABB& aabb, std::vector<Vec2>& points, std::pair<Vec2, Vec2>& minmax) {
+    const Vec3& min = aabb.m_Box.min;
+    const Vec3& max = aabb.m_Box.max;
+    const Vec3& pos = aabb.m_Transform.data[3];
+    const std::size_t size = 8;
+
+    // ªÒ»° 3d ∂•µ„
+    std::vector<Vec3> apexes;
+    apexes.reserve(size);
+    apexes.emplace_back(pos + min * aabb.m_Transform);
+    apexes.emplace_back(pos + max * aabb.m_Transform);
+    apexes.emplace_back(pos + Vec3{min.x, min.y, max.z} *aabb.m_Transform);
+    apexes.emplace_back(pos + Vec3{max.x, max.y, min.z} *aabb.m_Transform);
+
+    apexes.emplace_back(pos + Vec3{max.x, min.y, min.z} *aabb.m_Transform);
+    apexes.emplace_back(pos + Vec3{min.x, max.y, min.z} *aabb.m_Transform);
+    apexes.emplace_back(pos + Vec3{max.x, min.y, max.z} *aabb.m_Transform);
+    apexes.emplace_back(pos + Vec3{min.x, max.y, max.z} *aabb.m_Transform);
+
+    // 3d -> 2d
+    points.resize(size);
+    for (int i = 0; i < size; ++i) {
+        if (!w2s(&apexes[i], &points[i])) return false;
+#ifdef _DEBUG
+        ImGui::GetForegroundDrawList()->AddText(points[i], 0xffffffff, std::to_string(i).c_str());
+#endif
+    }
+
+    auto result = std::minmax_element(points.begin(), points.end(), 
+        [](const Vec2& lhs, const Vec2& rhs) {
+        return distance(lhs, Vec2{0, 0}) < distance(rhs, Vec2{0, 0});
+    });
+
+    // temp test
+    minmax.first = *result.first;
+    minmax.second = *result.second;
     return true;
 }
 } // fb

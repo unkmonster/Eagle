@@ -25,6 +25,7 @@ struct Vec3: public Vec2 {
 	Vec3() = default;
 	Vec3(float x_, float y_, float z_): Vec2(x_, y_), z(z_) {}
 	Vec3(const Vec2& v, float z_): Vec2(v), z(z_) {}
+	Vec3(const float* data): Vec3(data[0], data[1], data[2]) {}
 
 	Vec3 operator+ (const Vec3& rhs) const {
 		return Vec3(this->Vec2::operator+(rhs), z + rhs.z);
@@ -55,4 +56,12 @@ inline std::ostream& operator<<(std::ostream& os, const Vec4& vec) {
 
 inline double distance(const Vec2& p1, const Vec2& p2) {
 	return sqrt(pow(fabs(p1.x - p2.x), 2) + pow(fabs(p1.y - p2.y), 2));
+}
+
+inline Vec3 operator*(const Vec3& v, const Matrix16& matrix) {
+	return {
+		v.x * matrix.data[0][0] + v.y * matrix.data[1][0] + v.z * matrix.data[2][0],
+		v.x * matrix.data[0][1] + v.y * matrix.data[1][1] + v.z * matrix.data[2][1],
+		v.x * matrix.data[0][2] + v.y * matrix.data[1][2] + v.z * matrix.data[2][2],
+	};
 }
