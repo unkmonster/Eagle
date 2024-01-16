@@ -1,6 +1,6 @@
 #include "utility.h"
 
-std::shared_ptr<wchar_t> GetLastErrorTextW(DWORD err_code = GetLastError()) {
+std::shared_ptr<wchar_t> GetLastErrorTextW(DWORD err_code) {
     wchar_t* buffer;
     FormatMessageW(
         FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -14,7 +14,7 @@ std::shared_ptr<wchar_t> GetLastErrorTextW(DWORD err_code = GetLastError()) {
     return std::shared_ptr<wchar_t>(buffer, LocalFree);
 }
 
-std::shared_ptr<char> GetLastErrorTextA(DWORD err_code = GetLastError()) {
+std::shared_ptr<char> GetLastErrorTextA(DWORD err_code) {
     char* buffer;
     FormatMessageA(
         FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,

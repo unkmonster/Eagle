@@ -24,10 +24,16 @@ Renderer::Renderer() {
 	// Setup Platform/Renderer backends
 	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
 	assert(ImGui_ImplDX11_Init(m_pD3dDevice, m_pD3dDeviceContext));
-	//assert(ImGui_ImplDX11_CreateDeviceObjects());
+
+	// Anti-ScreenShot
+	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_EXCLUDEFROMCAPTURE)) 
+		SPDLOG_WARN(GetLastErrorTextA().get());
 }
 
 Renderer::~Renderer() {
+	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_NONE))
+		SPDLOG_WARN(GetLastErrorTextA().get());
+
 	// Cleanup
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();

@@ -39,7 +39,7 @@ public:
 				++begin;
 			}
 			if (match) {
-				spdlog::info("Found '{}' at {}+0x{:X}", m_name, m.name(), uintptr_t(begin - m_sign.size() - m.as<uint8_t*>()));
+				SPDLOG_INFO("Found '{}' at {}+0x{:X}", m_name, m.name(), uintptr_t(begin - m_sign.size() - m.as<uint8_t*>()));
 				return begin - m_sign.size();
 			}	
 		}

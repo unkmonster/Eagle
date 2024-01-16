@@ -18,8 +18,8 @@ inline void output_debug(const std::string& msg, Args&&... args) {
 } // fmt
 
 
-std::shared_ptr<wchar_t> GetLastErrorTextW(DWORD err_code);
-std::shared_ptr<char> GetLastErrorTextA(DWORD err_code);
+std::shared_ptr<wchar_t> GetLastErrorTextW(DWORD err_code = GetLastError());
+std::shared_ptr<char> GetLastErrorTextA(DWORD err_code = GetLastError());
 
 #ifdef UNICODE
 #define GetLastErrorText  GetLastErrorTextW

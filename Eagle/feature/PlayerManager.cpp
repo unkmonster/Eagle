@@ -13,8 +13,8 @@ void PlayerManager::run() {
 	if (!ValidPointer(m_localPlayer)) return;
 	
 	std::optional<Vec3> localOrigin;
-	if (ValidPointer(m_localPlayer->clientSoldierEntity)) 
-		localOrigin = m_localPlayer->clientSoldierEntity->GetOrigin();
+	if (ValidPointer(m_localPlayer->clientSoldierEntity))
+		localOrigin = m_localPlayer->clientSoldierEntity->location;
 	
 	auto& esp_set = global.m_setting.m_esp;
 	int count{};
@@ -38,7 +38,6 @@ void PlayerManager::run() {
 				health = soldier->healthcomponent->m_Health;
 				if (auto data = reinterpret_cast<fb::ClientVehicleEntity*>(soldier)->GetEntityData()) {
 					maxHealth = data->m_FrontMaxHealth;
-					spdlog::debug("sid: {}", data->m_namesid);
 				}
 			}
 		}

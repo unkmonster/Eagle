@@ -19,7 +19,7 @@ public:
 			if (result != MH_OK)
 				throw std::runtime_error(fmt::format("({}) Failed to MH_CreateHook '{}'", static_cast<int>(result), m_name).c_str());
 			m_disabled = false;
-			spdlog::info("Created Hook '{}'", m_name);
+			SPDLOG_INFO("Created Hook '{}'", m_name);
 		} catch (const std::runtime_error& err) {
 			SPDLOG_DEBUG(err.what());
 		}
@@ -29,7 +29,7 @@ public:
 		try {
 			disable();
 		} catch (const std::runtime_error& err) {
-			spdlog::warn(err.what());
+			SPDLOG_WARN(err.what());
 		}
 	}
 
@@ -68,7 +68,7 @@ public:
 		if (auto result = MH_DisableHook(m_target); result != MH_OK)
 			throw std::runtime_error(fmt::format("({}) Failed to MH_DisableHook '{}'", static_cast<int>(result), m_name).c_str());
 		m_disabled = true;
-		spdlog::info("Disabled Hook '{}'", m_name);
+		SPDLOG_INFO("Disabled Hook '{}'", m_name);
 	}
 
 	auto get_origin() {
