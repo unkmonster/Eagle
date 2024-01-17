@@ -280,12 +280,6 @@ public:
     virtual void Function24();
     virtual void GetTransformAABB(LinearTransform_AABB& mTransform) const;// 26
     virtual void GetTransform(Matrix16* mTransform) const;
-public:
-    Vec3 GetOrigin() const {
-        Matrix16 matrix;
-        this->GetTransform(&matrix);
-        return matrix.data[3];
-    }
 };
 
 class ClientVehicleEntity: public ClientEntity {
@@ -521,7 +515,7 @@ inline bool GetBoxPosition(const LinearTransform_AABB& aabb, std::vector<Vec2>& 
     for (int i = 0; i < size; ++i) {
         if (!w2s(&apexes[i], &points[i])) return false;
 #ifdef _DEBUG
-        ImGui::GetForegroundDrawList()->AddText(points[i], 0xffffffff, std::to_string(i).c_str());
+        //ImGui::GetForegroundDrawList()->AddText(points[i], 0xffffffff, std::to_string(i).c_str());
 #endif
     }
 

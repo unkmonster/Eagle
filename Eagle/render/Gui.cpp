@@ -38,6 +38,11 @@ void Gui::DrawMenu() {
 	ImGui::SetNextItemWidth(75.f);
 	ImGui::InputInt("Effective Distance", &global.m_setting.m_esp.m_effective, 25, 50);
 
+
+	ImGui::SeparatorText("Health Bar");
+	ImGui::Checkbox("Health Bar", &global.m_setting.m_esp.m_showHealthBar);
+	ImGui::Combo("##", (int*)&global.m_setting.m_esp.m_healthBarPos, "Top\0Bottom\0Left\0Right\0");
+
 	ImGui::SeparatorText("Text Information");
 	ImGui::Checkbox("name", &global.m_setting.m_esp.m_showName);
 	ImGui::SameLine();

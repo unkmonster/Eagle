@@ -35,7 +35,7 @@ void PlayerManager::run() {
 				health = soldier->healthcomponent->m_Health;
 				maxHealth = soldier->healthcomponent->m_MaxHealth;
 			} else {
-				health = soldier->healthcomponent->m_Health;
+				health = soldier->healthcomponent->m_VehicleHealth;
 				if (auto data = reinterpret_cast<fb::ClientVehicleEntity*>(soldier)->GetEntityData()) {
 					maxHealth = data->m_FrontMaxHealth;
 				}
@@ -53,6 +53,9 @@ void PlayerManager::run() {
 		soldier->GetTransformAABB(aabb);
 		if (!fb::GetBoxPosition(aabb, points, minmax, origin)) continue;
 		if (localOrigin && distance(*localOrigin, origin) > esp_set.m_effective) continue;
+		
+		auto width = minmax.second.x - minmax.first.x;
+		auto height = minmax.second.y - minmax.first.y;
 
 		//  -- ESP
 		uint32_t boxColor = ImGui::ColorConvertFloat4ToU32(soldier->occluded? esp_set.m_boxColorOccluded : esp_set.m_boxColor);
@@ -68,12 +71,10 @@ void PlayerManager::run() {
 		// Status Line
 		if (esp_set.m_showStatusLine) {
 			Vec2 p1, p2;
-			auto width = minmax.second.x - minmax.first.x;
-			auto height = minmax.second.y - minmax.first.y;
 			auto displaySize = ImGui::GetIO().DisplaySize;
 
 			switch (esp_set.m_statusLinePos) {
-			case POS_UP:
+			case POS_TOP:
 				p1 = {displaySize.x / 2.f, 0};
 				p2 = {minmax.first.x + width / 2.f, minmax.first.y};
 				break;
@@ -84,12 +85,33 @@ void PlayerManager::run() {
 			CSprite2d::DrawOutline(p1, p2, boxColor);
 		}
 
+		// 血条
+		if (esp_set.m_showHealthBar) {
+			Vec2 p1, p2;
+			float thickness = width / 10.f;
+
+			if (esp_set.m_healthBarPos == POS_LEFT) {
+				p2 = {minmax.first.x - 5.f, minmax.second.y};
+				p1 = {p2.x - thickness, minmax.first.y};
+			} else if (esp_set.m_healthBarPos == POS_RIGHT) {
+				p1 = {minmax.second.x + 5.f, minmax.first.y};
+				p2 = {p1.x + thickness, minmax.second.y};
+			} else if (esp_set.m_healthBarPos == POS_TOP) {
+				p2 = {minmax.second.x, minmax.first.y - 5.f};
+				p1 = {minmax.first.x, p2.y - thickness};
+			} else {
+				p1 = {minmax.first.x, minmax.second.y + 5.f};
+				p2 = {minmax.second.x, p1.y + thickness};
+			}
+			Esp::DrawHealthBar(health, maxHealth,p1, p2, esp_set.m_healthBarPos);
+		}
+
 		// 文本信息
 		std::vector<std::string> infos;
 		if (esp_set.m_showName)
 			infos.emplace_back(plr->szName);
 		if (esp_set.m_showHp)
-			infos.emplace_back(fmt::format("HP: {}", health));
+			infos.emplace_back(fmt::format("HP: {}", static_cast<int>(health)));
 		if (esp_set.m_showDistance && localOrigin.has_value())
 			infos.emplace_back(fmt::format("Distance: {}M", static_cast<int>(distance(localOrigin.value(), origin))));
 

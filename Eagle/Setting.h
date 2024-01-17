@@ -10,8 +10,10 @@ enum BoxType {
 };
 
 enum PosType {
-	POS_UP,
-	POS_BOTTOM
+	POS_TOP,
+	POS_BOTTOM,
+	POS_LEFT,
+	POS_RIGHT
 };
 
 struct Setting {
@@ -30,7 +32,11 @@ struct Setting {
 
 		// status line
 		bool m_showStatusLine{false};
-		PosType m_statusLinePos{POS_UP};
+		PosType m_statusLinePos{POS_TOP};
+
+		// health bar
+		bool m_showHealthBar{true};
+		PosType m_healthBarPos{POS_RIGHT};
 	} m_esp;
 
 	float m_textSize = 16.f;	//
