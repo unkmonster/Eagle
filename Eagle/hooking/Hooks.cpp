@@ -13,13 +13,6 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-HMODULE WINAPI Hooks::LoadLibraryA(LPCSTR lpLibFileName) {
-	auto result = gHookManager->LoadLibraryA.get_origin()(lpLibFileName);
-	SPDLOG_DEBUG("Loaded {} - 0x{:X}", lpLibFileName, (uintptr_t)result);
-	return result;
-}
-
-
 // IDXGISwapChain
 HRESULT WINAPI Hooks::Present(IDXGISwapChain* ths, UINT SyncInterval, UINT Flags) {
 	gRenderer->on_present();	// must be not nullptr
@@ -54,20 +47,35 @@ LRESULT CALLBACK Hooks::WNDPROC(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam))
 		return true;
 
+	static POINT cursorPos;
+
 	switch (msg) {
 	case WM_KEYDOWN:
-		if (wParam == VK_INSERT)
-			global.m_showMenu ^= 1;
+		if (wParam == VK_INSERT) {
+			if (global.m_showMenu == true)
+				GetCursorPos(&cursorPos);
+			else
+				gHookManager->SetCursorPos.call_origin(cursorPos.x, cursorPos.y);
+			ImGui::GetIO().MouseDrawCursor = global.m_showMenu ^= 1;
+		}
 		else if (wParam == VK_END)
 			std::thread(FreeLibrary, global.m_thisModule).detach();
-			//global.m_running = false;
 		break;
 
-	case WM_LBUTTONDBLCLK:
+	// ÆÁ±ÎÓÎÏ·Êó±êÊäÈë
+	case WM_MOUSEMOVE:
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
 		if (global.m_showMenu)
 			return 0;
 	}
 	return CallWindowProcA(gPointers->oWndproc, hwnd, msg, wParam, lParam);
+}
+
+BOOL __stdcall Hooks::SetCursorPos(int X, int Y) {
+	if (global.m_showMenu)
+		return TRUE;
+	return gHookManager->SetCursorPos.call_origin(X, Y);
 }

@@ -13,8 +13,6 @@
 #include "Pointers.h"
 
 struct Hooks {
-	static HMODULE WINAPI LoadLibraryA(LPCSTR lpLibFileName);
-
 	static HRESULT STDMETHODCALLTYPE Present(IDXGISwapChain* ths, UINT SyncInterval, UINT Flags);
 	static HRESULT STDMETHODCALLTYPE ResizeBuffers(
 		IDXGISwapChain* ths,
@@ -26,6 +24,7 @@ struct Hooks {
 	);
 
 	static LRESULT CALLBACK WNDPROC(HWND, UINT, WPARAM, LPARAM);
+	static BOOL WINAPI SetCursorPos(int X, int Y);
 };
 
 
@@ -34,7 +33,6 @@ class HookManager {
 	friend Singleton<HookManager>;
 private:
 	HookManager(bool enable_now = true) try:
-		LoadLibraryA(::LoadLibraryA, Hooks::LoadLibraryA, "LoadLibraryA"),
 		Present(gPointers->fPresent, Hooks::Present, "Present"),
 		ResizeBuffers(gPointers->fResizeBuffers, Hooks::ResizeBuffers, "ResizeBuffers")
 	{
@@ -63,9 +61,9 @@ private:
 		~MINHOOK() { MH_Uninitialize(); }
 	} minHook;
 
-	MinHookCpp<decltype(::LoadLibraryA)> LoadLibraryA;
 	MinHookCpp<decltype(Hooks::Present)> Present;
 	MinHookCpp<decltype(Hooks::ResizeBuffers)> ResizeBuffers;
+	MinHookCpp<decltype(::SetCursorPos)> SetCursorPos{::SetCursorPos, Hooks::SetCursorPos, "SetCursorPos"};
 };
 
 inline HookManager* gHookManager{};

@@ -20,6 +20,7 @@ Renderer::Renderer() {
 
 	m_menuFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Roboto-Medium.ttf").string().c_str(), m_fontSize);
 	m_textFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Spiegel_TT_SemiBold.ttf").string().c_str(), m_fontSize);
+	ImGui::GetIO().MouseDrawCursor = true;
 
 	// Setup Platform/Renderer backends
 	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
