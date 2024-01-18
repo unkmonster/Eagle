@@ -155,6 +155,7 @@
     <ClCompile Include="bf-1\Frosbite.cpp" />
     <ClCompile Include="bf-1\Obfuscationmanager.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="feature\Esp.cpp" />
     <ClCompile Include="feature\PlayerManager.cpp" />
     <ClCompile Include="hooking\Hooks.cpp" />
     <ClCompile Include="render\Gui.cpp" />
@@ -163,7 +164,6 @@
     <ClCompile Include="utils\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="feature\AimBot.h" />
     <ClInclude Include="feature\Esp.h" />
     <ClInclude Include="feature\PlayerManager.h" />
     <ClInclude Include="math\Vector.h" />

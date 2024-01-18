@@ -5,8 +5,10 @@
 #include "render/Sprite2d.h"
 #include "Global.h"
 
-class EspPage {
+class Esp {
 public:
+	static void run();
+private:
 	static void Draw3dBox(const std::vector<Vec2>& points, uint32_t color) {
 		// 暂时固定点位吧
 		auto dl = ImGui::GetBackgroundDrawList();
@@ -58,14 +60,13 @@ public:
 	}
 
 	static void DrawCrossHair(uint32_t color) {
-		auto dl = ImGui::GetBackgroundDrawList();
-		constexpr int length = 5;
+		constexpr int length = 7;
 
 		auto size = ImGui::GetIO().DisplaySize;
 		size.x /= 2.f;
 		size.y /= 2.f;
 
-		dl->AddLine({size.x - length, size.y}, {size.x + length, size.y}, color);
-		dl->AddLine({size.x, size.y - length}, {size.x, size.y + length}, color);
+		CSprite2d::DrawOutline({size.x - length, size.y}, {size.x + length, size.y}, color);
+		CSprite2d::DrawOutline({size.x, size.y - length}, {size.x, size.y + length}, color);
 	}
 };

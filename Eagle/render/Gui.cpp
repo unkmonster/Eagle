@@ -33,7 +33,7 @@ void Gui::DrawMenu() {
 }
 
 void Gui::DrawDebugMenu() {
-	ImGui::Begin("DEBUG");
+	/*ImGui::Begin("DEBUG");
 	if (ImGui::Button("Cls"))
 		system("cls");
 
@@ -74,7 +74,7 @@ void Gui::DrawDebugMenu() {
 	if (ImGui::Button("Unload")) 
 		std::thread(FreeLibrary, global.m_thisModule).detach();
 	
-	ImGui::End();
+	ImGui::End();*/
 }
 
 void Gui::MenuBar() {
@@ -101,6 +101,8 @@ void Gui::EspPage() {
 	ImGui::ColorEdit4("##box color", (float*)&espSet.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
 	ImGui::ColorEdit4("Visible/Invisible", (float*)&espSet.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
+	ImGui::SameLine();
+	ImGui::ColorEdit4("Vehicle", (float*)&espSet.m_vehicleColor, ImGuiColorEditFlags_NoInputs);
 	
 	
 	ImGui::Checkbox("Status Line", &espSet.m_showStatusLine);
@@ -120,6 +122,13 @@ void Gui::EspPage() {
 	ImGui::SameLine();
 	ImGui::Checkbox("Distance", &espSet.m_showDistance);
 
+	ImGui::SeparatorText("CrossHair");
+	ImGui::Checkbox("Show", &espSet.m_showCrossHair);
+	ImGui::SameLine();
+	ImGui::ColorEdit4("##", (float*)&espSet.m_crossHairColor, ImGuiColorEditFlags_NoInputs);
+	ImGui::SameLine();
+	ImGui::ColorEdit4("##", (float*)&espSet.m_crossHairColorAtEnemy, ImGuiColorEditFlags_NoInputs);
+
 	ImGui::Separator();
 	ImGui::SliderInt("Effective Distance", &espSet.m_effective, 0, 3000);
 	ImGui::EndChild();
@@ -129,9 +138,15 @@ void Gui::AimBotPage() {
 	if (ImGui::BeginChild("AimBotPage")) {
 		auto& aimbot_set = global.m_setting.m_aimBot;
 
-		ImGui::Checkbox("CrossHair", &aimbot_set.m_showCrossHair);
-		ImGui::SameLine();
-		ImGui::ColorEdit4("##", reinterpret_cast<float*>(&aimbot_set.m_crossHairColor), ImGuiColorEditFlags_NoInputs);
+		ImGui::Checkbox("Enable", &aimbot_set.m_enable);
+		ImGui::EndChild();
+	}
+}
+
+void Gui::MiscPage() {
+	if (ImGui::BeginChild("MiscPage")) {
+		ImGui::SetNextItemWidth(100.f);
+		ImGui::InputFloat("Global Font Size", &global.m_setting.m_textSize, 1.f);
 		ImGui::EndChild();
 	}
 }

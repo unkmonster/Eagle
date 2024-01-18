@@ -27,6 +27,7 @@ using D3DXVECTOR3 = Vec3;
 #define ValidPointer( pointer ) ( pointer != NULL && (DWORD_PTR)pointer >= 0x10000 && (DWORD_PTR)pointer < 0x00007FFFFFFEFFFF /*&& some other checks*/ )
 void* DecryptPointer(DWORD64 EncryptedPtr, DWORD64 PointerKey);
 
+#define MAX_PLAYERS 64
 
 namespace fb
 {

@@ -13,6 +13,7 @@
 class Renderer {
 	friend Singleton<Renderer>;
 	friend class PlayerManager;
+	friend class Esp;
 	Renderer();
 public:
 	~Renderer();

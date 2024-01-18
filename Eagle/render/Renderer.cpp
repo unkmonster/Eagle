@@ -7,6 +7,7 @@
 #include "Gui.h"
 #include "Pointers.h"
 #include "feature/PlayerManager.h"
+#include "feature/Esp.h"
 #include "FileManager.h"
 
 Renderer::Renderer() {
@@ -39,7 +40,8 @@ void Renderer::on_present() {
 		m_gui->DrawMenu();
 	}
 
-	gPlayerManager->run();
+	gPlayerManager->update();
+	Esp::run();
 
 	// Rendering
 	ImGui::Render();

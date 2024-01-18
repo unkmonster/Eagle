@@ -33,8 +33,8 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 
 				gPointers = Singleton<Pointers>::initialize();
 				gRenderer = Singleton<Renderer>::initialize();
-				gHookManager = Singleton<HookManager>::initialize();
 				gPlayerManager = Singleton<PlayerManager>::initialize();
+				gHookManager = Singleton<HookManager>::initialize();
 			}).get();
 		} catch (const std::exception& ex) {
 			MessageBoxA(NULL, fmt::format("{} Error\n{}", __func__, ex.what()).c_str(), PROJECTNAME, MB_ICONERROR);

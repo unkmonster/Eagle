@@ -31,6 +31,7 @@ class Gui {
 
 		m_pages.emplace_back("Esp", EspPage);
 		m_pages.emplace_back("AimBot", AimBotPage);
+		m_pages.emplace_back("Misc", MiscPage);
 	}
 public:
 	~Gui() {
@@ -44,10 +45,11 @@ public:
 private:
 	std::vector<std::pair<std::string, std::function<void()>>> m_pages;
 	ImFont* m_menuFont;
-	float m_fontSize = 14.f;
+	float m_fontSize = 15.f;
 
 	static void MenuBar();
 
 	static void EspPage();
 	static void AimBotPage();
+	static void MiscPage();
 };
