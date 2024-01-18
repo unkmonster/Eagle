@@ -39,5 +39,13 @@ struct Setting {
 		PosType m_healthBarPos{POS_RIGHT};
 	} m_esp;
 
+	struct AimBot {
+		bool m_enable;
+		bool m_showCrossHair{true};
+		Vec4 m_crossHairColor{1, 1, 1, 1};	//
+		Vec4 m_crossHairColorAtEnemy{1, 0, 0, 1};
+		Vec4 m_targetColor{1, 1, 1, 1};
+		Vec4 m_targetColorOccluded{1, 1, 1, 1};
+	} m_aimBot;
 	float m_textSize = 16.f;	//
 };

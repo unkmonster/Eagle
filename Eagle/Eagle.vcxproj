@@ -161,9 +161,9 @@
     <ClCompile Include="render\Renderer.cpp" />
     <ClCompile Include="render\Sprite2d.cpp" />
     <ClCompile Include="utils\Utility.cpp" />
-    <ClCompile Include="utils\Singleton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="feature\AimBot.h" />
     <ClInclude Include="feature\Esp.h" />
     <ClInclude Include="feature\PlayerManager.h" />
     <ClInclude Include="math\Vector.h" />

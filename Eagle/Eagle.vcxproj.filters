@@ -21,9 +21,6 @@
     <ClCompile Include="hooking\Hooks.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="utils\Singleton.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="utils\Utility.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -108,6 +105,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="feature\Esp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="feature\AimBot.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

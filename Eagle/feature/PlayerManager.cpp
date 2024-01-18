@@ -17,9 +17,11 @@ void PlayerManager::run() {
 		localOrigin = m_localPlayer->clientSoldierEntity->location;
 	
 	auto& esp_set = global.m_setting.m_esp;
+	Vec2 center{ImGui::GetIO().DisplaySize.x / 2.f, ImGui::GetIO().DisplaySize.y / 2.f};
 	int count{};
 
-	for (int i = 0; i <= 64; ++i) {
+	uint32_t crossHairColor = ImGui::ColorConvertFloat4ToU32(global.m_setting.m_aimBot.m_crossHairColor);
+	for (int i = 0; i < 64; ++i) {
 		auto plr = GetPlayerById(i);
 		if (!ValidPointer(plr)) continue;
 		if (plr == m_localPlayer) continue;
@@ -57,6 +59,10 @@ void PlayerManager::run() {
 		auto width = minmax.second.x - minmax.first.x;
 		auto height = minmax.second.y - minmax.first.y;
 
+		// 判断当前敌人是否在准星内
+		if (global.m_setting.m_aimBot.m_showCrossHair && !soldier->occluded && InBound(center, minmax.first, minmax.second))
+			crossHairColor = ImGui::ColorConvertFloat4ToU32(global.m_setting.m_aimBot.m_crossHairColorAtEnemy);
+
 		//  -- ESP
 		uint32_t boxColor = ImGui::ColorConvertFloat4ToU32(soldier->occluded? esp_set.m_boxColorOccluded : esp_set.m_boxColor);
 		if (esp_set.m_showBox) {
@@ -82,7 +88,8 @@ void PlayerManager::run() {
 				p1 = {displaySize.x / 2.f, displaySize.y};
 				p2 = {minmax.first.x + width / 2.f, minmax.second.y};
 			}
-			CSprite2d::DrawOutline(p1, p2, boxColor);
+			ImGui::GetBackgroundDrawList()->AddLine(p1, p2, boxColor);
+			//CSprite2d::DrawOutline(p1, p2, boxColor);
 		}
 
 		// 血条
@@ -129,6 +136,10 @@ void PlayerManager::run() {
 
 	Vec2 begin(5.f, 15.f);
 	CSprite2d::DrawTextColumnOutline(begin, texts, gRenderer->m_textFont, global.m_setting.m_textSize, 0xffffffff);
+
+	// 准星
+	if (localOrigin && global.m_setting.m_aimBot.m_showCrossHair)
+		EspPage::DrawCrossHair(crossHairColor);
 }
 
 //void PlayerManager::DrawTextInfo(Vec2 begin) {

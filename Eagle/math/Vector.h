@@ -10,6 +10,7 @@ struct Vec2 {
 
 	Vec2() = default;
 	Vec2(float a, float b): x(a), y(b) {}
+	Vec2(const ImVec2& v): Vec2(v.x, v.y) {}
 	
 	operator ImVec2() const {
 		return ImVec2(x, y);
@@ -64,4 +65,8 @@ inline Vec3 operator*(const Vec3& v, const Matrix16& matrix) {
 		v.x * matrix.data[0][1] + v.y * matrix.data[1][1] + v.z * matrix.data[2][1],
 		v.x * matrix.data[0][2] + v.y * matrix.data[1][2] + v.z * matrix.data[2][2],
 	};
+}
+
+inline bool InBound(const Vec2& point, const Vec2& min, const Vec2& max) {
+	return point.x > min.x && point.x < max.x && point.y > min.y && point.y < max.y;
 }

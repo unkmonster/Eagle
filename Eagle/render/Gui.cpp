@@ -126,5 +126,12 @@ void Gui::EspPage() {
 }
 
 void Gui::AimBotPage() {
+	if (ImGui::BeginChild("AimBotPage")) {
+		auto& aimbot_set = global.m_setting.m_aimBot;
 
+		ImGui::Checkbox("CrossHair", &aimbot_set.m_showCrossHair);
+		ImGui::SameLine();
+		ImGui::ColorEdit4("##", reinterpret_cast<float*>(&aimbot_set.m_crossHairColor), ImGuiColorEditFlags_NoInputs);
+		ImGui::EndChild();
+	}
 }

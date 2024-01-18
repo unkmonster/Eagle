@@ -56,4 +56,16 @@ public:
 				dl->AddRect(p1, p2, 0xff000000);
 		}
 	}
+
+	static void DrawCrossHair(uint32_t color) {
+		auto dl = ImGui::GetBackgroundDrawList();
+		constexpr int length = 5;
+
+		auto size = ImGui::GetIO().DisplaySize;
+		size.x /= 2.f;
+		size.y /= 2.f;
+
+		dl->AddLine({size.x - length, size.y}, {size.x + length, size.y}, color);
+		dl->AddLine({size.x, size.y - length}, {size.x, size.y + length}, color);
+	}
 };

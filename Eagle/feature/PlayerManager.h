@@ -12,7 +12,6 @@ public:
 	void run();
 public:
 	const fb::ClientPlayer* m_localPlayer;
-	const fb::ClientPlayer* m_closestFromCrosshair;
 };
 
 inline PlayerManager* gPlayerManager{};
