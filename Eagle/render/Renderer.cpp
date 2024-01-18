@@ -11,20 +11,9 @@
 
 Renderer::Renderer() {
 	CreateRenderView(gPointers->pSwapChain);
-	
-	ImGui::CreateContext();
+	m_gui = Singleton<Gui>::initialize(m_pD3dDevice, m_pD3dDeviceContext);
 
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	ImGui::StyleColorsDark();
-
-	m_menuFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Roboto-Medium.ttf").string().c_str(), m_fontSize);
-	m_textFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Spiegel_TT_SemiBold.ttf").string().c_str(), m_fontSize);
-	ImGui::GetIO().MouseDrawCursor = true;
-
-	// Setup Platform/Renderer backends
-	assert(ImGui_ImplWin32_Init(gPointers->hwnd));
-	assert(ImGui_ImplDX11_Init(m_pD3dDevice, m_pD3dDeviceContext));
+	m_textFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Spiegel_TT_SemiBold.ttf").string().c_str(), 16.f);
 
 	// Anti-ScreenShot
 	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_EXCLUDEFROMCAPTURE)) 
@@ -36,9 +25,7 @@ Renderer::~Renderer() {
 		SPDLOG_WARN(GetLastErrorTextA().get());
 
 	// Cleanup
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	Singleton<Gui>::destroy();
 	ReleaseRenderView();
 }
 
@@ -49,8 +36,7 @@ void Renderer::on_present() {
 	ImGui::NewFrame();
 
 	if (global.m_showMenu) {
-		Gui::DrawMenu();
-		Gui::DrawDebugMenu();
+		m_gui->DrawMenu();
 	}
 
 	gPlayerManager->run();

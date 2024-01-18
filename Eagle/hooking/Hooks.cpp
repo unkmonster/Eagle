@@ -55,7 +55,7 @@ LRESULT CALLBACK Hooks::WNDPROC(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			if (global.m_showMenu == true)
 				GetCursorPos(&cursorPos);
 			else
-				gHookManager->SetCursorPos.call_origin(cursorPos.x, cursorPos.y);
+				SetCursorPos(cursorPos.x, cursorPos.y);
 			ImGui::GetIO().MouseDrawCursor = global.m_showMenu ^= 1;
 		}
 		else if (wParam == VK_END)

@@ -17,7 +17,7 @@ enum PosType {
 };
 
 struct Setting {
-	struct Esp {
+	struct EspPage {
 		bool m_showBox{true};
 		Vec4 m_boxColor{1, 1, 1, 1};
 		Vec4 m_boxColorOccluded{1, 1, 1, 1};

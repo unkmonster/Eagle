@@ -65,7 +65,7 @@ void PlayerManager::run() {
 			else if (global.m_setting.m_esp.m_boxType == BOX_CORNER)
 				CSprite2d::DrawCornerRectOutline(minmax.first, minmax.second, boxColor);
 			else if (esp_set.m_boxType == BOX_3D)
-				Esp::Draw3dBox(points, boxColor);
+				EspPage::Draw3dBox(points, boxColor);
 		}
 
 		// Status Line
@@ -103,7 +103,7 @@ void PlayerManager::run() {
 				p1 = {minmax.first.x, minmax.second.y + 5.f};
 				p2 = {minmax.second.x, p1.y + thickness};
 			}
-			Esp::DrawHealthBar(health, maxHealth,p1, p2, esp_set.m_healthBarPos);
+			EspPage::DrawHealthBar(health, maxHealth,p1, p2, esp_set.m_healthBarPos);
 		}
 
 		// 文本信息

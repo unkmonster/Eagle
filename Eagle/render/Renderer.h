@@ -7,6 +7,7 @@
 
 #include "Logger.h"
 #include "utils/Singleton.h"
+#include "Gui.h"
 
 
 class Renderer {
@@ -44,9 +45,9 @@ private:
 	ID3D11Device* m_pD3dDevice{};
 	ID3D11DeviceContext* m_pD3dDeviceContext{};
 	ID3D11RenderTargetView* m_pD3D11RenderTargetView{};
-	float m_fontSize = 14.f;
+
 	ImFont* m_textFont;
-	ImFont* m_menuFont;
+	Gui* m_gui;
 };
 
 inline Renderer* gRenderer{};

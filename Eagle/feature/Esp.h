@@ -5,7 +5,7 @@
 #include "render/Sprite2d.h"
 #include "Global.h"
 
-class Esp {
+class EspPage {
 public:
 	static void Draw3dBox(const std::vector<Vec2>& points, uint32_t color) {
 		// 暂时固定点位吧

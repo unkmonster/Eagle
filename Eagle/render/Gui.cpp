@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <string>
+#include <thread>
 
 #include <imgui.h>
 #include <fmt/format.h>
@@ -13,42 +14,20 @@
 #include "feature/PlayerManager.h"
 
 void Gui::DrawMenu() {
-	ImGui::Begin(PROJECTNAME);
+	ImGui::Begin(PROJECTNAME, nullptr, ImGuiWindowFlags_MenuBar);
+	MenuBar();
 
-	ImGui::Checkbox("Box", &global.m_setting.m_esp.m_showBox);
+	static int selected = 0;
+	if (ImGui::BeginChild("index", {ImGui::GetWindowSize().x * 0.2f, 0})) {
+		for (int i = 0; i < m_pages.size(); ++i) {
+			if (ImGui::Selectable(m_pages[i].first.c_str(), selected == i))
+				selected = i;
+		}
+		ImGui::EndChild();
+	}
+
 	ImGui::SameLine();
-
-	ImGui::ColorEdit4("##regular", (float*)&global.m_setting.m_esp.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
-	ImGui::SameLine();
-
-	ImGui::ColorEdit4("Occluded", (float*)&global.m_setting.m_esp.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
-	ImGui::SameLine();
-
-	ImGui::SetNextItemWidth(80.f);
-	ImGui::Combo("Type", (int*)&global.m_setting.m_esp.m_boxType, "Full\0Corner\0Cube\0");
-	ImGui::SameLine();
-
-	ImGui::Checkbox("Status Line", &global.m_setting.m_esp.m_showStatusLine);
-	ImGui::SameLine();
-
-	ImGui::SetNextItemWidth(75.f);
-	ImGui::Combo("##Status Line Type", (int*)&global.m_setting.m_esp.m_statusLinePos, "Up\0Bottom\0");
-	ImGui::Separator();
-
-	ImGui::SetNextItemWidth(75.f);
-	ImGui::InputInt("Effective Distance", &global.m_setting.m_esp.m_effective, 25, 50);
-
-
-	ImGui::SeparatorText("Health Bar");
-	ImGui::Checkbox("Health Bar", &global.m_setting.m_esp.m_showHealthBar);
-	ImGui::Combo("##", (int*)&global.m_setting.m_esp.m_healthBarPos, "Top\0Bottom\0Left\0Right\0");
-
-	ImGui::SeparatorText("Text Information");
-	ImGui::Checkbox("name", &global.m_setting.m_esp.m_showName);
-	ImGui::SameLine();
-	ImGui::Checkbox("Health", &global.m_setting.m_esp.m_showHp);
-	ImGui::SameLine();
-	ImGui::Checkbox("Distance", &global.m_setting.m_esp.m_showDistance);
+	m_pages[selected].second();
 
 	ImGui::End();
 }
@@ -96,4 +75,56 @@ void Gui::DrawDebugMenu() {
 		std::thread(FreeLibrary, global.m_thisModule).detach();
 	
 	ImGui::End();
+}
+
+void Gui::MenuBar() {
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("Menu")) {
+			if (ImGui::MenuItem("Unload"))
+				std::thread(FreeLibrary, global.m_thisModule).detach();
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+}
+
+void Gui::EspPage() {
+	auto& espSet = global.m_setting.m_esp;
+	ImGui::BeginChild("EspPage");
+	ImGui::Checkbox("Box", &espSet.m_showBox);
+	
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(75.f);
+	ImGui::Combo("##Type", (int*)&espSet.m_boxType, "Full\0Corner\0Cube\0");
+	
+	ImGui::SameLine();
+	ImGui::ColorEdit4("##box color", (float*)&espSet.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
+	ImGui::SameLine();
+	ImGui::ColorEdit4("Visible/Invisible", (float*)&espSet.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
+	
+	
+	ImGui::Checkbox("Status Line", &espSet.m_showStatusLine);
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(75.f);
+	ImGui::Combo("##Status Line Type", (int*)&espSet.m_statusLinePos, "Up\0Bottom\0");
+
+	ImGui::Checkbox("Health Bar", &espSet.m_showHealthBar);
+	ImGui::SameLine();
+	ImGui::SetNextItemWidth(75.f);
+	ImGui::Combo("##Health Bar type", (int*)&espSet.m_healthBarPos, "Top\0Bottom\0Left\0Right\0");
+
+	ImGui::SeparatorText("Text Information");
+	ImGui::Checkbox("name", &espSet.m_showName);
+	ImGui::SameLine();
+	ImGui::Checkbox("Health", &espSet.m_showHp);
+	ImGui::SameLine();
+	ImGui::Checkbox("Distance", &espSet.m_showDistance);
+
+	ImGui::Separator();
+	ImGui::SliderInt("Effective Distance", &espSet.m_effective, 0, 3000);
+	ImGui::EndChild();
+}
+
+void Gui::AimBotPage() {
+
 }
