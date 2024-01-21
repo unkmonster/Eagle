@@ -6,6 +6,7 @@
 #include <string>
 #include <vector> 
 #include <algorithm>
+#include <utility>
 
 #include <imgui.h>
   
@@ -27,7 +28,7 @@ using D3DXVECTOR3 = Vec3;
 #define ValidPointer( pointer ) ( pointer != NULL && (DWORD_PTR)pointer >= 0x10000 && (DWORD_PTR)pointer < 0x00007FFFFFFEFFFF /*&& some other checks*/ )
 void* DecryptPointer(DWORD64 EncryptedPtr, DWORD64 PointerKey);
 
-#define MAX_PLAYERS 64
+#define MAX_PLAYERS 70
 
 namespace fb
 {
@@ -285,11 +286,11 @@ public:
 
 class ClientVehicleEntity: public ClientEntity {
 public:
-    HealthComponent* GetHealthComponent() {
+    HealthComponent* GetHealthComponent() const {
         return *(HealthComponent**)((BYTE*)this + 0x1D0);
     };
 
-    VehicleEntityData* GetEntityData() {
+    VehicleEntityData* GetEntityData() const {
         return *(VehicleEntityData**)((BYTE*)this + 0x30);
     };
 
@@ -313,6 +314,16 @@ public:
         max = glmPos + Mat3Vec(TransformMatrix, max);
 
         return Vec3(min.x, min.y, min.z);
+    }
+
+    bool GetHealth(std::pair<float, float>& hp) const {
+        __try {
+            hp.first = GetHealthComponent()->m_VehicleHealth;
+            hp.second = GetEntityData()->m_FrontMaxHealth;
+            return true;
+        } __except (EXCEPTION_EXECUTE_HANDLER) {
+            return false;
+        }
     }
 }; //Size: 0x0048
 
@@ -373,28 +384,9 @@ public:
         return (this->occluded == false);
     }
 
-    AxisAlignedBox GetAABB() {
-        AxisAlignedBox aabb = AxisAlignedBox();
-        if (this->poseType == 0) // standing
-        {
-            aabb.min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
-            aabb.max = D3DXVECTOR4(0.350000f, 1.700000f, 0.350000f, 0);
-        }
-        if (this->poseType == 1) // crouching
-        {
-            aabb.min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
-            aabb.max = D3DXVECTOR4(0.350000f, 1.150000f, 0.350000f, 0);
-        }
-        if (this->poseType == 2) // prone
-        {
-            aabb.min = D3DXVECTOR4(-0.350000f, 0.000000f, -0.350000f, 0);
-            aabb.max = D3DXVECTOR4(0.350000f, 0.400000f, 0.350000f, 0);
-        }
-        return aabb;
-    }
     bool GetBonePos(int BoneId, D3DXVECTOR3* vOut);
 
-
+    bool GetHealth(std::pair<float, float>&) const;
 }; //Size: 0x104C
 
 class ClientPlayer {

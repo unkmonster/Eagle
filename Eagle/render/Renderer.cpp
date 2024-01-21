@@ -44,6 +44,9 @@ void Renderer::on_present() {
 	gPlayerManager->update();
 	Esp::run();
 	AimBot::run();
+	if (global.m_setting.m_showObserversList) {
+		Gui::DrawObserversMenu(gPlayerManager->observers());
+	}
 
 	// Rendering
 	ImGui::Render();

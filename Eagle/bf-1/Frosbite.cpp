@@ -23,3 +23,13 @@ bool fb::ClientSoldierEntity::GetBonePos(int BoneId, D3DXVECTOR3* vOut) {
 		return false;	
 	}
 }
+
+bool fb::ClientSoldierEntity::GetHealth(std::pair<float, float>& hp) const {
+	__try {
+		hp.first = this->healthcomponent->m_Health;
+		hp.second = this->healthcomponent->m_MaxHealth;
+		return true;
+	} __except (EXCEPTION_EXECUTE_HANDLER) {
+		return false;
+	}	
+}

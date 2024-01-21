@@ -32,13 +32,15 @@ void Gui::DrawMenu() {
 	ImGui::End();
 }
 
-void Gui::DrawDebugMenu(std::vector<Vec2> positions) {
-	ImGui::Begin("position");
+void Gui::DrawObserversMenu(std::vector<char*> observers) {
+	if (observers.empty()) return;
+
+	ImGui::Begin("Observers", 0, ImGuiWindowFlags_AlwaysAutoResize);
 	if (ImGui::BeginTable("position", 1, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
-		for (int i = 0; i < positions.size(); ++i) {
+		for (int i = 0; i < observers.size(); ++i) {
 			ImGui::TableNextRow();
 			ImGui::TableSetColumnIndex(0);
-			ImGui::TextUnformatted(fmt::format("({}, {})", (int)positions[i].x, (int)positions[i].y).c_str());
+			ImGui::TextUnformatted(observers[i]? observers[i] : "unknown");
 		}
 		ImGui::EndTable();
 	}
@@ -115,6 +117,7 @@ void Gui::MiscPage() {
 	if (ImGui::BeginChild("MiscPage")) {
 		ImGui::SetNextItemWidth(100.f);
 		ImGui::InputFloat("Global Font Size", &global.m_setting.m_textSize, 1.f);
+		ImGui::Checkbox("Show Observers", &global.m_setting.m_showObserversList);
 		ImGui::EndChild();
 	}
 }

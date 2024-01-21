@@ -13,33 +13,14 @@ void PlayerManager::update() {
 	m_players.clear();
 
 	m_localPlayer = GetLocalPlayer();
-	// 载入对局中
-	if (!m_localPlayer) return;
+	//// 载入对局中
+	//if (!m_localPlayer) return;
 
 	for (int i = 0; i < MAX_PLAYERS; ++i) {
-		CPlayer currentPlayer{};
-
-		auto plr = currentPlayer.m_player = GetPlayerById(i);
+		auto plr = GetPlayerById(i);
 		if (!ValidPointer(plr)) continue;
 		if (plr == m_localPlayer) continue;
-
-		auto soldier = plr->clientSoldierEntity;
-		if (!ValidPointer(soldier)) continue;
-
-		// Get health of current entity
-		if (ValidPointer(soldier->healthcomponent)) {
-			if (!plr->InVehicle()) {
-				currentPlayer.m_health = soldier->healthcomponent->m_Health;
-				currentPlayer.m_maxHealth = soldier->healthcomponent->m_MaxHealth;
-			} else {
-				currentPlayer.m_health = soldier->healthcomponent->m_VehicleHealth;
-				if (auto data = reinterpret_cast<fb::ClientVehicleEntity*>(soldier)->GetEntityData()) {
-					currentPlayer.m_maxHealth = data->m_FrontMaxHealth;
-				}
-			}
-		}
-		if (!(currentPlayer.m_health > 0.1f && currentPlayer.m_health <= currentPlayer.m_maxHealth)) continue;	// invalid entity
-		m_players.emplace_back(currentPlayer);
+		m_players.emplace_back(plr);
 	}
 }
 
@@ -50,25 +31,37 @@ fb::ClientPlayer * PlayerManager::GetClosetFromCrossHair(int boneId, Vec2& pos, 
 
 	std::shared_lock<std::shared_mutex> lock(mtx);
 	for (const auto& x : m_players) {
-		if (x.m_player->teamId == m_localPlayer->teamId)
-			continue;
-		if (x.m_player->InVehicle()) 
-			continue;
-		if (onlyVisible && x.m_player->clientSoldierEntity->occluded)
-			continue;
+		if (!ValidPointer(x->clientSoldierEntity)) continue;
+		if (x->teamId == m_localPlayer->teamId) continue;
+		if (x->InVehicle()) continue;
+		if (onlyVisible && x->clientSoldierEntity->occluded) continue;
+		std::pair<float, float> hp;
+		if (!x->clientSoldierEntity->GetHealth(hp)) continue;
+		if (hp.first < 0.1f || hp.first > hp.second) continue;
 		
 		Vec3 bone3d;
 		Vec2 bone2d;
-		if (!x.m_player->clientSoldierEntity->GetBonePos(boneId, &bone3d))
+		if (!x->clientSoldierEntity->GetBonePos(boneId, &bone3d))
 			continue;
 		if (!fb::w2s(&bone3d, &bone2d))
 			continue;
 		auto dist = distance(bone2d, center);
 		if (!result || dist < minDistance) {
 			minDistance = dist;
-			result = x.m_player;
+			result = x;
 			pos = bone2d;
 		}
 	}
+	return result;
+}
+
+std::vector<char*> PlayerManager::observers() const {
+	std::vector<char*> result;
+	for (const auto& x : m_players) {
+		if (x->isSpectator)
+			result.push_back(x->name);
+	}
+	if (ValidPointer(m_localPlayer) && m_localPlayer->isSpectator)
+		result.push_back(m_localPlayer->name);
 	return result;
 }

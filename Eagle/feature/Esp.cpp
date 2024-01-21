@@ -1,6 +1,7 @@
 #include "Esp.h"
 
 #include <optional>
+#include <utility>
 
 #include <fmt/format.h>
 
@@ -33,18 +34,31 @@ void Esp::run() {
 
 	Vec2 closet;
 	fb::ClientPlayer* closetPlayer = gPlayerManager->GetClosetFromCrossHair(fb::BONE_Head, closet, true);
-	if (closetPlayer) {
+	if (closetPlayer) 
 		ImGui::GetBackgroundDrawList()->AddLine(center, closet, 0xff0000ff);
-	}
-
-	std::vector<Vec2> positions;
+	
 
 	for (const auto& x : gPlayerManager->m_players) {
-		auto player = x.m_player;
-		auto soldier = player->clientSoldierEntity;
-		if (player->teamId == localPlayer->teamId) continue; // 队友
+		auto soldier = x->clientSoldierEntity;
+		if (!ValidPointer(soldier)) continue;
+		if (x->teamId == localPlayer->teamId) continue; // 队友
 
 		++enemies;
+
+		// 获取血量信息
+		std::optional<std::pair<float, float>> health;
+		{
+			std::pair<float, float> temp;
+			if (x->InVehicle()) {
+				if (x->clientVehicleEntity->GetHealth(temp))
+					health = std::move(temp);
+			} else {
+				if (soldier->GetHealth(temp))
+					health = std::move(temp);
+			}
+		}
+		if (!health || health->first < 0.1f || health->first > health->second)
+			continue;
 
 		//  获取当前实体位置信息
 		fb::LinearTransform_AABB aabb;
@@ -60,17 +74,17 @@ void Esp::run() {
 		auto width = minmax.second.x - minmax.first.x;
 		auto height = minmax.second.y - minmax.first.y;
 
-		positions.emplace_back(minmax.first);
-
+		
+		
 		// 判断当前敌人是否被瞄准
 		if (esp_set.m_showCrossHair && !soldier->occluded && InBound(center, minmax.first, minmax.second))
 			crossHairColor = ImGui::ColorConvertFloat4ToU32(esp_set.m_crossHairColorAtEnemy);
 
 		// 判断颜色
 		uint32_t boxColor{};
-		if (player->InVehicle())
+		if (x->InVehicle())
 			boxColor = ImGui::ColorConvertFloat4ToU32(esp_set.m_vehicleColor);
-		else if (player == closetPlayer)
+		else if (x == closetPlayer)
 			boxColor = 0xff0000ff;
 		else
 			boxColor = ImGui::ColorConvertFloat4ToU32(soldier->occluded? esp_set.m_boxColorOccluded : esp_set.m_boxColor);
@@ -103,7 +117,7 @@ void Esp::run() {
 		}
 
 		// 绘制血条
-		if (esp_set.m_showHealthBar) {
+		if (esp_set.m_showHealthBar && health) {
 			Vec2 p1, p2;
 			float thickness = width / 20.f;
 
@@ -120,23 +134,21 @@ void Esp::run() {
 				p1 = {minmax.first.x, minmax.second.y + 5.f};
 				p2 = {minmax.second.x, p1.y + thickness};
 			}
-			DrawHealthBar(x.m_health, x.m_maxHealth, p1, p2, esp_set.m_healthBarPos);
+			DrawHealthBar(health->first, health->second, p1, p2, esp_set.m_healthBarPos);
 		}
 
 		// 绘制文本信息
 		std::vector<std::string> infos;
 		if (esp_set.m_showName)
-			infos.emplace_back(player->szName);
-		if (esp_set.m_showHp)
-			infos.emplace_back(fmt::format("HP: {}", static_cast<int>(x.m_health)));
+			infos.emplace_back(x->szName);
+		if (esp_set.m_showHp && health)
+			infos.emplace_back(fmt::format("HP: {}", static_cast<int>(health->second)));
 		if (localOrigin && esp_set.m_showDistance)
 			infos.emplace_back(fmt::format("{}M", static_cast<uint64_t>(dist)));
 
 		CSprite2d::DrawTextColumnOutline({minmax.second.x + 5.f, minmax.first.y}, infos,
 			gRenderer->m_textFont, global.m_setting.m_textSize, 0xFFFFFFFF);
 	}
-
-	gRenderer->m_gui->DrawDebugMenu(std::move(positions));
 
 	// 绘制水印
 	std::vector<std::string> texts;

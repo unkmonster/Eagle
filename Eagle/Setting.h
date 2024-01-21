@@ -49,4 +49,5 @@ struct Setting {
 	} m_aimBot;
 
 	float m_textSize = 16.f;
+	bool m_showObserversList{true};
 };
