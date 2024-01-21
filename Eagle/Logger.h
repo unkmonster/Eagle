@@ -53,7 +53,7 @@ class Logger {
 #else
 		logger->set_level(spdlog::level::info);
 #endif // _DEBUG
-		logger->set_pattern("[%Y-%m-%d %T.%e] [%s:%#] %^%l%$ %v");
+		logger->set_pattern("[%Y-%m-%d %T.%e] [%s:%#] [%^%l%$] %v");
 		spdlog::set_default_logger(logger);
 	}
 public:

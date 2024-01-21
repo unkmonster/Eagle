@@ -32,49 +32,17 @@ void Gui::DrawMenu() {
 	ImGui::End();
 }
 
-void Gui::DrawDebugMenu() {
-	/*ImGui::Begin("DEBUG");
-	if (ImGui::Button("Cls"))
-		system("cls");
-
-	if (ImGui::Button("Print Players")) {
-		for (int i = 0; i < 64; ++i) {
-			auto pPlayer = GetPlayerById(i);
-			if (!pPlayer) continue;
-			spdlog::debug("****************************************");
-			spdlog::debug("[{}] '{}' teamId = {}", i, pPlayer->name, pPlayer->teamId);
-			if (pPlayer->clientSoldierEntity) {
-				auto soldier = pPlayer->clientSoldierEntity;
-				spdlog::debug("Soldier = 0x{:X}", (uintptr_t)soldier);
-				spdlog::debug("{}/{} v = {}", soldier->healthcomponent->m_Health, soldier->healthcomponent->m_MaxHealth, soldier->healthcomponent->m_VehicleHealth);
-				spdlog::debug("pos = {}, {}, {}", soldier->location.x, soldier->location.y, soldier->location.z);
-				spdlog::debug("{}", pPlayer->InVehicle());
-			}
-
-			if (auto vehicle = pPlayer->clientVehicleEntity; ValidPointer(vehicle)) {
-				spdlog::debug("Vehicle = 0x{:X}", (uintptr_t)vehicle);
-				auto pos = vehicle->GetVehiclePosition();
-				spdlog::debug("({}, {}, {})", pos.x, pos.y, pos.z);
-				fb::LinearTransform_AABB aabb;
-				vehicle->GetTransformAABB(aabb);
-				spdlog::debug("({}, {}, {})", aabb.m_Transform.data[3][0], aabb.m_Transform.data[3][1], aabb.m_Transform.data[3][2]);
-			}	
+void Gui::DrawDebugMenu(std::vector<Vec2> positions) {
+	ImGui::Begin("position");
+	if (ImGui::BeginTable("position", 1, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
+		for (int i = 0; i < positions.size(); ++i) {
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextUnformatted(fmt::format("({}, {})", (int)positions[i].x, (int)positions[i].y).c_str());
 		}
+		ImGui::EndTable();
 	}
-
-	if (ImGui::Button("Local info")) {
-		spdlog::debug("LocalPlayer: 0x{:X}", (uintptr_t)gPlayerManager->m_localPlayer);
-		if (gPlayerManager->m_localPlayer) {
-			spdlog::debug("soldier: 0x{:X}", (uintptr_t)gPlayerManager->m_localPlayer->clientSoldierEntity);
-			spdlog::debug("vehicle: 0x{:X}", (uintptr_t)gPlayerManager->m_localPlayer->clientVehicleEntity);
-		}
-			
-	}
-
-	if (ImGui::Button("Unload")) 
-		std::thread(FreeLibrary, global.m_thisModule).detach();
-	
-	ImGui::End();*/
+	ImGui::End();
 }
 
 void Gui::MenuBar() {

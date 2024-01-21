@@ -487,6 +487,8 @@ inline bool w2s(Vec3* in, Vec2* out) {
 
     x += 0.5f * out->x * width + 0.5f;
     y -= 0.5f * out->y * height + 0.5f;
+
+    if (x > width || x < 0 || y > height || y < 0) return false;
     out->x = x;
     out->y = y;
     return true;
@@ -515,9 +517,6 @@ inline bool GetBoxPosition(const LinearTransform_AABB& aabb, std::vector<Vec2>& 
     points.resize(size);
     for (int i = 0; i < size; ++i) {
         if (!w2s(&apexes[i], &points[i])) return false;
-#ifdef _DEBUG
-        //ImGui::GetForegroundDrawList()->AddText(points[i], 0xffffffff, std::to_string(i).c_str());
-#endif
     }
 
     auto result = std::minmax_element(points.begin(), points.end(), 

@@ -37,6 +37,8 @@ void Esp::run() {
 		ImGui::GetBackgroundDrawList()->AddLine(center, closet, 0xff0000ff);
 	}
 
+	std::vector<Vec2> positions;
+
 	for (const auto& x : gPlayerManager->m_players) {
 		auto player = x.m_player;
 		auto soldier = player->clientSoldierEntity;
@@ -55,6 +57,8 @@ void Esp::run() {
 
 		auto width = minmax.second.x - minmax.first.x;
 		auto height = minmax.second.y - minmax.first.y;
+
+		positions.emplace_back(minmax.first);
 
 		// 判断当前敌人是否被瞄准
 		if (esp_set.m_showCrossHair && !soldier->occluded && InBound(center, minmax.first, minmax.second))
@@ -129,6 +133,8 @@ void Esp::run() {
 		CSprite2d::DrawTextColumnOutline({minmax.second.x + 5.f, minmax.first.y}, infos,
 			gRenderer->m_textFont, global.m_setting.m_textSize, 0xFFFFFFFF);
 	}
+
+	gRenderer->m_gui->DrawDebugMenu(std::move(positions));
 
 	// 绘制水印
 	std::vector<std::string> texts;

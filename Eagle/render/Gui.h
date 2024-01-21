@@ -41,7 +41,7 @@ public:
 	}
 
 	void DrawMenu();
-	void DrawDebugMenu();
+	void DrawDebugMenu(std::vector<Vec2> positions);
 private:
 	std::vector<std::pair<std::string, std::function<void()>>> m_pages;
 	ImFont* m_menuFont;

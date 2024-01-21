@@ -11,23 +11,23 @@
 #include "FileManager.h"
 
 Renderer::Renderer() {
+	// Anti-ScreenShot
+	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_EXCLUDEFROMCAPTURE))
+		SPDLOG_WARN(GetLastErrorTextA().get());
+
 	CreateRenderView(gPointers->pSwapChain);
 	m_gui = Singleton<Gui>::initialize(m_pD3dDevice, m_pD3dDeviceContext);
 
 	m_textFont = ImGui::GetIO().Fonts->AddFontFromFileTTF((gFileManager->m_base / "Spiegel_TT_SemiBold.ttf").string().c_str(), 16.f);
-
-	// Anti-ScreenShot
-	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_EXCLUDEFROMCAPTURE)) 
-		SPDLOG_WARN(GetLastErrorTextA().get());
 }
 
 Renderer::~Renderer() {
-	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_NONE))
-		SPDLOG_WARN(GetLastErrorTextA().get());
-
 	// Cleanup
 	Singleton<Gui>::destroy();
 	ReleaseRenderView();
+
+	if (!SetWindowDisplayAffinity(gPointers->hwnd, WDA_NONE))
+		SPDLOG_WARN(GetLastErrorTextA().get());
 }
 
 void Renderer::on_present() {
