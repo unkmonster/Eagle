@@ -37,7 +37,7 @@ private:
 		assert(hwnd = FindWindow(TEXT("Battlefield™ 1"), nullptr));
 		assert(oWndproc = reinterpret_cast<WNDPROC>(GetWindowLongPtrA(hwnd, GWLP_WNDPROC)));
 		
-		pSwapChain = Pattern("48 8B 0D ? ? ? ? 48 8B D8 4C 89 71 18", typeid(pSwapChain).name()).
+		pSwapChain = Pattern("48 8B 0D ? ? ? ? 48 8B D8 4C 89 71 18", "IDXGISwapChain*").
 			find(mGameOverLay).add(3).rip().as<Pointer&>().add(0x18).as<IDXGISwapChain*&>();
 		
 		// Functions

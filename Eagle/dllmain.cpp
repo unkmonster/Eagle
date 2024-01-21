@@ -27,8 +27,8 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD reason, LPVOID lpvReserved) {
 				GetEnvironmentVariableA("appdata", buffer, MAX_PATH);
 				gFileManager = Singleton<CFileManager>::initialize((std::filesystem::path(buffer) / "Eagle"));
 				if (std::filesystem::exists(gFileManager->m_setting_bin)) {
-					CFileManager::load(gFileManager->m_setting_bin, &global.m_setting);
-					SPDLOG_INFO("Setting has been Loaded from disk");
+					if (CFileManager::load(gFileManager->m_setting_bin, &global.m_setting))
+						SPDLOG_INFO("Setting has been Loaded from disk");
 				}
 
 				gPointers = Singleton<Pointers>::initialize();

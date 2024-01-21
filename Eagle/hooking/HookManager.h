@@ -38,7 +38,10 @@ class HookManager {
 private:
 	HookManager(bool enable_now) try:
 		Present(gPointers->fPresent, Hooks::Present, "Present"),
-		ResizeBuffers(gPointers->fResizeBuffers, Hooks::ResizeBuffers, "ResizeBuffers")
+		ResizeBuffers(gPointers->fResizeBuffers, Hooks::ResizeBuffers, "ResizeBuffers"),
+		SetCursorPos{L"User32", "SetCursorPos", Hooks::SetCursorPos},
+		SetWindowDisplayAffinity{L"User32", "SetWindowDisplayAffinity", Hooks::SetWindowDisplayAffinity},
+		GetWindowDisplayAffinity{L"User32", "GetWindowDisplayAffinity", Hooks::GetWindowDisplayAffinity}
 	{
 		if (enable_now)
 			enable_all();
@@ -67,9 +70,10 @@ private:
 private:
 	MinHookCpp<decltype(Hooks::Present)> Present;
 	MinHookCpp<decltype(Hooks::ResizeBuffers)> ResizeBuffers;
-	MinHookCpp<decltype(::SetCursorPos)> SetCursorPos{::SetCursorPos, Hooks::SetCursorPos, "SetCursorPos"};
-	MinHookCpp<decltype(Hooks::SetWindowDisplayAffinity)> SetWindowDisplayAffinity{::SetWindowDisplayAffinity, Hooks::SetWindowDisplayAffinity, "SetWindowDisplayAffinity"};
-	MinHookCpp<decltype(Hooks::GetWindowDisplayAffinity)> GetWindowDisplayAffinity{::GetWindowDisplayAffinity, Hooks::GetWindowDisplayAffinity, "GetWindowDisplayAffinity"};
+
+	MinHookCpp<decltype(Hooks::SetCursorPos)> SetCursorPos;
+	MinHookCpp<decltype(Hooks::SetWindowDisplayAffinity)> SetWindowDisplayAffinity;
+	MinHookCpp<decltype(Hooks::GetWindowDisplayAffinity)> GetWindowDisplayAffinity;
 };
 
 inline HookManager* gHookManager{};

@@ -30,8 +30,8 @@ public:
 
 		Vec2 cursor{ImGui::GetIO().DisplaySize.x / 2.f, ImGui::GetIO().DisplaySize.y / 2.f};
 		std::pair<short, short> diff{
-			pos.x - cursor.x,
-			pos.y - cursor.y
+			static_cast<short>(pos.x - cursor.x),
+			static_cast<short>(pos.y - cursor.y)
 		};
 
 		if (abs(diff.first) > maxDist) {

@@ -14,15 +14,21 @@ public:
 	MinHookCpp() = default;
 
 	MinHookCpp(LPVOID target, LPVOID detour, std::string name = ""): m_name(name), m_target(target) {
-		try {
-			auto result = MH_CreateHook(target, detour, reinterpret_cast<LPVOID*>(&m_origin));
-			if (result != MH_OK)
-				throw std::runtime_error(fmt::format("({}) Failed to MH_CreateHook '{}'", static_cast<int>(result), m_name).c_str());
-			m_disabled = false;
-			SPDLOG_INFO("Created Hook '{}'", m_name);
-		} catch (const std::runtime_error& err) {
-			SPDLOG_DEBUG(err.what());
-		}
+		auto result = MH_CreateHook(target, detour, reinterpret_cast<LPVOID*>(&m_origin));
+		if (result != MH_OK)
+			throw std::runtime_error(fmt::format("'{}' {}", name, MH_StatusToString(result)).c_str());
+		m_disabled = false;
+		SPDLOG_INFO("Created Hook '{}'", m_name);
+	}
+
+	// Api Hook
+	MinHookCpp(const std::wstring& module, const std::string& func, LPVOID detour): m_name(func) {
+		auto result = MH_CreateHookApiEx(module.c_str(), func.c_str(),
+			detour, reinterpret_cast<LPVOID*>(&m_origin), &m_target);
+		if (result != MH_OK) 
+			throw std::runtime_error(fmt::format("'{}' {}", func, MH_StatusToString(result)));
+		m_disabled = false;
+		SPDLOG_INFO("Created Hook '{}'", m_name);
 	}
 
 	~MinHookCpp() {
