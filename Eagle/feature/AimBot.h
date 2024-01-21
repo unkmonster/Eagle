@@ -8,7 +8,7 @@
 
 class AimBot {
 public:
-	static void aim() {
+	static void run() {
 		using namespace std::chrono_literals;
 		constexpr int maxDist = 20;
 		static fb::ClientPlayer* prev{};

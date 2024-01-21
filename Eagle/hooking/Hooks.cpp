@@ -79,3 +79,15 @@ BOOL __stdcall Hooks::SetCursorPos(int X, int Y) {
 		return TRUE;
 	return gHookManager->SetCursorPos.call_origin(X, Y);
 }
+
+BOOL __stdcall Hooks::SetWindowDisplayAffinity(HWND hWnd, DWORD dwAffinity) {
+	SPDLOG_DEBUG("{} has been called", __func__);
+	return TRUE;
+}
+
+BOOL Hooks::GetWindowDisplayAffinity(HWND hWnd, DWORD * pdwAffinity) {
+	SPDLOG_DEBUG("{} has been called", __func__);
+	auto result = gHookManager->GetWindowDisplayAffinity.call_origin(hWnd, pdwAffinity);
+	*pdwAffinity &= ~WDA_EXCLUDEFROMCAPTURE;
+	return result;
+}

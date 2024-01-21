@@ -25,6 +25,10 @@ struct Hooks {
 
 	static LRESULT CALLBACK WNDPROC(HWND, UINT, WPARAM, LPARAM);
 	static BOOL WINAPI SetCursorPos(int X, int Y);
+
+	// Anti-Ss
+	static BOOL WINAPI SetWindowDisplayAffinity(HWND hWnd, DWORD dwAffinity);
+	static BOOL GetWindowDisplayAffinity(HWND hWnd, DWORD *pdwAffinity);
 };
 
 
@@ -32,7 +36,7 @@ class HookManager {
 	friend Hooks;
 	friend Singleton<HookManager>;
 private:
-	HookManager(bool enable_now = true) try:
+	HookManager(bool enable_now) try:
 		Present(gPointers->fPresent, Hooks::Present, "Present"),
 		ResizeBuffers(gPointers->fResizeBuffers, Hooks::ResizeBuffers, "ResizeBuffers")
 	{
@@ -60,10 +64,12 @@ private:
 		MINHOOK() { MH_Initialize(); }
 		~MINHOOK() { MH_Uninitialize(); }
 	} minHook;
-
+private:
 	MinHookCpp<decltype(Hooks::Present)> Present;
 	MinHookCpp<decltype(Hooks::ResizeBuffers)> ResizeBuffers;
 	MinHookCpp<decltype(::SetCursorPos)> SetCursorPos{::SetCursorPos, Hooks::SetCursorPos, "SetCursorPos"};
+	MinHookCpp<decltype(Hooks::SetWindowDisplayAffinity)> SetWindowDisplayAffinity{::SetWindowDisplayAffinity, Hooks::SetWindowDisplayAffinity, "SetWindowDisplayAffinity"};
+	MinHookCpp<decltype(Hooks::GetWindowDisplayAffinity)> GetWindowDisplayAffinity{::GetWindowDisplayAffinity, Hooks::GetWindowDisplayAffinity, "GetWindowDisplayAffinity"};
 };
 
 inline HookManager* gHookManager{};

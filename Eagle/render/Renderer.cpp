@@ -43,7 +43,7 @@ void Renderer::on_present() {
 
 	gPlayerManager->update();
 	Esp::run();
-	AimBot::aim();
+	AimBot::run();
 
 	// Rendering
 	ImGui::Render();
