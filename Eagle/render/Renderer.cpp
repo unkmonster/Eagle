@@ -7,6 +7,7 @@
 #include "Gui.h"
 #include "Pointers.h"
 #include "feature/PlayerManager.h"
+#include "feature/AimBot.h"
 #include "feature/Esp.h"
 #include "FileManager.h"
 
@@ -42,6 +43,7 @@ void Renderer::on_present() {
 
 	gPlayerManager->update();
 	Esp::run();
+	AimBot::aim();
 
 	// Rendering
 	ImGui::Render();

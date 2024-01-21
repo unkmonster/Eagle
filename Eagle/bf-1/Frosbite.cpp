@@ -1,5 +1,7 @@
 #include "Frosbite.h"
 
+#include "Logger.h"
+
 bool fb::ClientSoldierEntity::GetBonePos(int BoneId, D3DXVECTOR3* vOut) {
 	__try {
 		BoneCollisionComponent* pBoneCollisionComponent = this->bonecollisioncomponent;
@@ -17,6 +19,7 @@ bool fb::ClientSoldierEntity::GetBonePos(int BoneId, D3DXVECTOR3* vOut) {
 
 		return true;
 	} __except (EXCEPTION_EXECUTE_HANDLER) {
+		SPDLOG_WARN("EX: {}", GetExceptionCode());
 		return false;	
 	}
 }

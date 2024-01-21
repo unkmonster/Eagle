@@ -362,9 +362,11 @@ public:
     char pad_099C[1712]; //0x099C
 
     bool IsValid() {
+        if (!this->healthcomponent) return false;
         return (this->healthcomponent->m_Health > 0.1f && this->healthcomponent->m_Health <= this->healthcomponent->m_MaxHealth);
     }
     bool IsDead() {
+        if (!this->healthcomponent) return true;
         return !(this->healthcomponent->m_Health > 0.1f);
     }
     bool IsVisible() {
@@ -408,8 +410,8 @@ public:
     char pad_0020[32]; //0x0020
     char szName[8]; //0x0040
     char pad_0048[7144]; //0x0048
-    uint8_t N00000393; //0x1C30
-    uint8_t N0000042C; //0x1C31
+    uint8_t isBot; //0x1C30
+    uint8_t isSpectator; //0x1C31
     char pad_1C32[2]; //0x1C32
     uint8_t teamId; //0x1C34
     char pad_1C35[259]; //0x1C35

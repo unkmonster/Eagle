@@ -51,10 +51,12 @@ void Esp::run() {
 		std::pair<Vec2, Vec2> minmax;
 		std::vector<Vec2> points;
 		Vec3 origin;
+		double dist{};
 		soldier->GetTransformAABB(aabb);
 		if (!fb::GetBoxPosition(aabb, points, minmax, origin)) continue;
-		if (localOrigin && distance(*localOrigin, origin) > esp_set.m_effective) continue;
-
+		if (localOrigin && (dist = distance(*localOrigin, origin)) > esp_set.m_effective) 
+			continue;
+		
 		auto width = minmax.second.x - minmax.first.x;
 		auto height = minmax.second.y - minmax.first.y;
 
@@ -64,7 +66,7 @@ void Esp::run() {
 		if (esp_set.m_showCrossHair && !soldier->occluded && InBound(center, minmax.first, minmax.second))
 			crossHairColor = ImGui::ColorConvertFloat4ToU32(esp_set.m_crossHairColorAtEnemy);
 
-		//  绘制方框
+		// 判断颜色
 		uint32_t boxColor{};
 		if (player->InVehicle())
 			boxColor = ImGui::ColorConvertFloat4ToU32(esp_set.m_vehicleColor);
@@ -73,7 +75,7 @@ void Esp::run() {
 		else
 			boxColor = ImGui::ColorConvertFloat4ToU32(soldier->occluded? esp_set.m_boxColorOccluded : esp_set.m_boxColor);
 		 
-		
+		//  绘制方框
 		if (esp_set.m_showBox) {
 			if (global.m_setting.m_esp.m_boxType == BOX_FULL)
 				CSprite2d::DrawRectOutline(minmax.first, minmax.second, boxColor);
@@ -103,7 +105,7 @@ void Esp::run() {
 		// 绘制血条
 		if (esp_set.m_showHealthBar) {
 			Vec2 p1, p2;
-			float thickness = width / 10.f;
+			float thickness = width / 20.f;
 
 			if (esp_set.m_healthBarPos == POS_LEFT) {
 				p2 = {minmax.first.x - 5.f, minmax.second.y};
@@ -128,7 +130,7 @@ void Esp::run() {
 		if (esp_set.m_showHp)
 			infos.emplace_back(fmt::format("HP: {}", static_cast<int>(x.m_health)));
 		if (localOrigin && esp_set.m_showDistance)
-			infos.emplace_back(fmt::format("Distance: {}M", static_cast<int>(distance(*localOrigin, origin))));
+			infos.emplace_back(fmt::format("{}M", static_cast<uint64_t>(dist)));
 
 		CSprite2d::DrawTextColumnOutline({minmax.second.x + 5.f, minmax.first.y}, infos,
 			gRenderer->m_textFont, global.m_setting.m_textSize, 0xFFFFFFFF);

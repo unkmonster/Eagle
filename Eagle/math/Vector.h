@@ -59,6 +59,11 @@ inline double distance(const Vec2& p1, const Vec2& p2) {
 	return sqrt(pow(fabs(p1.x - p2.x), 2) + pow(fabs(p1.y - p2.y), 2));
 }
 
+inline double distance(const Vec3& p1, const Vec3& p2) {
+	auto linbian = distance(static_cast<Vec2>(p1), static_cast<Vec2>(p2));
+	return sqrt(pow(linbian, 2) + pow(abs(p1.z - p2.z), 2));
+}
+
 inline Vec3 operator*(const Vec3& v, const Matrix16& matrix) {
 	return {
 		v.x * matrix.data[0][0] + v.y * matrix.data[1][0] + v.z * matrix.data[2][0],

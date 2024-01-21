@@ -10,6 +10,7 @@
 #include "Logger.h"
 #include "Pointers.h"
 #include "render/Renderer.h"
+#include "feature/AimBot.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -57,8 +58,7 @@ LRESULT CALLBACK Hooks::WNDPROC(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			else
 				SetCursorPos(cursorPos.x, cursorPos.y);
 			ImGui::GetIO().MouseDrawCursor = global.m_showMenu ^= 1;
-		}
-		else if (wParam == VK_END)
+		} else if (wParam == VK_END)
 			std::thread(FreeLibrary, global.m_thisModule).detach();
 		break;
 

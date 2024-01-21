@@ -9,7 +9,7 @@
 #include "Esp.h"
 
 void PlayerManager::update() {
-	std::lock_guard<std::mutex> lock(mtx);
+	std::lock_guard<std::shared_mutex> lock(mtx);
 	m_players.clear();
 
 	m_localPlayer = GetLocalPlayer();
@@ -48,13 +48,15 @@ fb::ClientPlayer * PlayerManager::GetClosetFromCrossHair(int boneId, Vec2& pos, 
 	double minDistance{};
 	fb::ClientPlayer* result{};
 
-	std::lock_guard<std::mutex> lock(mtx);
+	std::shared_lock<std::shared_mutex> lock(mtx);
 	for (const auto& x : m_players) {
 		if (x.m_player->teamId == m_localPlayer->teamId)
 			continue;
+		if (x.m_player->InVehicle()) 
+			continue;
 		if (onlyVisible && x.m_player->clientSoldierEntity->occluded)
 			continue;
-
+		
 		Vec3 bone3d;
 		Vec2 bone2d;
 		if (!x.m_player->clientSoldierEntity->GetBonePos(boneId, &bone3d))

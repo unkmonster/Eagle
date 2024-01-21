@@ -24,7 +24,7 @@ private:
 	// 对局内所有有效玩家，除本地玩家
 	std::vector<CPlayer> m_players;
 
-	std::mutex mtx;
+	std::shared_mutex mtx;
 };
 
 inline PlayerManager* gPlayerManager{};
