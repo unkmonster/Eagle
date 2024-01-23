@@ -42,6 +42,7 @@ public:
 
 	void DrawMenu();
 	static void DrawObserversMenu(std::vector<char*>);
+	static void DrawDebugMenu(std::vector<std::string>);
 private:
 	std::vector<std::pair<std::string, std::function<void()>>> m_pages;
 	ImFont* m_menuFont;

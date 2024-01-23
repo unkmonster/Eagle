@@ -50,10 +50,11 @@ class Logger {
 		auto logger = std::make_shared<spdlog::logger>("deflogger", sinks.begin(), sinks.end());
 #ifdef _DEBUG
 		logger->set_level(spdlog::level::debug);
+		logger->set_pattern("[%Y-%m-%d %T.%e] [%s:%#] [%^%l%$] %v");
 #else
+		logger->set_pattern("[%Y-%m-%d %T.%e] [%^%l%$] %v");
 		logger->set_level(spdlog::level::info);
 #endif // _DEBUG
-		logger->set_pattern("[%Y-%m-%d %T.%e] [%s:%#] [%^%l%$] %v");
 		spdlog::set_default_logger(logger);
 	}
 public:

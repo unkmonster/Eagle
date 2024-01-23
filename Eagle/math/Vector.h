@@ -75,3 +75,7 @@ inline Vec3 operator*(const Vec3& v, const Matrix16& matrix) {
 inline bool InBound(const Vec2& point, const Vec2& min, const Vec2& max) {
 	return point.x > min.x && point.x < max.x && point.y > min.y && point.y < max.y;
 }
+
+inline Vec2 operator-(const Vec2& lhs, const Vec2& rhs) {
+	return {lhs.x - rhs.x, lhs.y - rhs.y};
+}

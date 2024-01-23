@@ -33,7 +33,7 @@ fb::ClientPlayer * PlayerManager::GetClosetFromCrossHair(int boneId, Vec2& pos, 
 	for (const auto& x : m_players) {
 		if (!ValidPointer(x->clientSoldierEntity)) continue;
 		if (x->teamId == m_localPlayer->teamId) continue;
-		if (x->InVehicle()) continue;
+		if (x->InVehicle() && !x->clientVehicleEntity->IsHorse()) continue;
 		if (onlyVisible && x->clientSoldierEntity->occluded) continue;
 		std::pair<float, float> hp;
 		if (!x->clientSoldierEntity->GetHealth(hp)) continue;
@@ -63,5 +63,11 @@ std::vector<char*> PlayerManager::observers() const {
 	}
 	if (ValidPointer(m_localPlayer) && m_localPlayer->isSpectator)
 		result.push_back(m_localPlayer->name);
+	return result;
+}
+
+std::vector<std::string> PlayerManager::debug_info() const {
+	std::vector<std::string> result;
+	result.emplace_back(fmt::format("localPlayer: 0x{:X}", uintptr_t(m_localPlayer)));
 	return result;
 }

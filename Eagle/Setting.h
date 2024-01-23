@@ -45,7 +45,11 @@ struct Setting {
 	} m_esp;
 
 	struct AimBot {
-		bool m_enable;
+		bool m_enable{true};
+		bool m_showArea{false};
+		Vec2 m_areaSize{1920.f, 1080.f};
+		Vec4 m_areaColor{1, 1, 1, 1};
+		int m_maxDistance = 100;
 	} m_aimBot;
 
 	float m_textSize = 16.f;

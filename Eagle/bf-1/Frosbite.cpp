@@ -33,3 +33,18 @@ bool fb::ClientSoldierEntity::GetHealth(std::pair<float, float>& hp) const {
 		return false;
 	}	
 }
+
+std::optional<Vec3> fb::ClientPlayer::GetPosition() const {
+	if (!ValidPointer(this->clientSoldierEntity)) 
+		return std::nullopt;
+
+	Vec3 result{};
+	if (this->InVehicle()) {
+		Matrix16 matrix;
+		this->clientVehicleEntity->GetTransform(&matrix);
+		result = matrix.data[3];
+	} else {
+		result = this->clientSoldierEntity->location;
+	}
+	return result;
+}

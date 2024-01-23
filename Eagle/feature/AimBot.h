@@ -16,7 +16,6 @@ public:
 		if (prev && prev->clientSoldierEntity && !prev->clientSoldierEntity->IsValid()) {
 			m_ready = false;
 			std::thread([]() {
-				SPDLOG_DEBUG("AimBot being freeze");
 				std::this_thread::sleep_for(800ms);
 				m_ready = true;
 			}).detach();
@@ -25,10 +24,21 @@ public:
 		if (!m_ready || !GetAsyncKeyState(VK_RBUTTON)) return;
 
 		Vec2 pos;
-		auto plr = gPlayerManager->GetClosetFromCrossHair(fb::BONE_Head, pos, true);
+		auto plr = gPlayerManager->GetClosetFromCrossHair(fb::BONE_Head, pos, false);
 		if (!ValidPointer(plr)) return;
-
 		Vec2 cursor{ImGui::GetIO().DisplaySize.x / 2.f, ImGui::GetIO().DisplaySize.y / 2.f};
+		
+		auto min = pos - Vec2{global.m_setting.m_aimBot.m_areaSize.x / 2.f, global.m_setting.m_aimBot.m_areaSize.y / 2.f};
+		auto max = min + global.m_setting.m_aimBot.m_areaSize;
+		if (!InBound(pos, min, max)) return;
+
+		if (gPlayerManager->m_localPlayer) {
+			auto selfPos = gPlayerManager->m_localPlayer->GetPosition();
+			auto targetPos = plr->GetPosition();
+			if (selfPos && targetPos && distance(*selfPos, *targetPos) > global.m_setting.m_aimBot.m_maxDistance) 
+				return;
+		}
+		
 		std::pair<short, short> diff{
 			static_cast<short>(pos.x - cursor.x),
 			static_cast<short>(pos.y - cursor.y)

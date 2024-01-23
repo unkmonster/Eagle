@@ -47,6 +47,19 @@ void Gui::DrawObserversMenu(std::vector<char*> observers) {
 	ImGui::End();
 }
 
+void Gui::DrawDebugMenu(std::vector<std::string> texts) {
+	ImGui::Begin("Dbg", 0, ImGuiWindowFlags_AlwaysAutoResize);
+	if (ImGui::BeginTable("Dbg", 1, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
+		for (int i = 0; i < texts.size(); ++i) {
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextUnformatted(texts[i].c_str());
+		}
+		ImGui::EndTable();
+	}
+	ImGui::End();
+}
+
 void Gui::MenuBar() {
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("Menu")) {
@@ -105,10 +118,20 @@ void Gui::EspPage() {
 }
 
 void Gui::AimBotPage() {
+	static auto& size = ImGui::GetIO().DisplaySize;
+
 	if (ImGui::BeginChild("AimBotPage")) {
 		auto& aimbot_set = global.m_setting.m_aimBot;
 
 		ImGui::Checkbox("Enable", &aimbot_set.m_enable);
+		
+		ImGui::Checkbox("Show Area", &aimbot_set.m_showArea);
+		ImGui::SameLine();
+		ImGui::ColorEdit4("##", (float*)&aimbot_set.m_areaColor, ImGuiColorEditFlags_NoInputs);
+
+		ImGui::SliderFloat("X", &aimbot_set.m_areaSize.x, 0, size.x);
+		ImGui::SliderFloat("Y", &aimbot_set.m_areaSize.y, 0, size.y);
+		ImGui::SliderInt("Max Effective Distance", &aimbot_set.m_maxDistance, 0, 3000);
 		ImGui::EndChild();
 	}
 }

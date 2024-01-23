@@ -1,6 +1,5 @@
 #include "Renderer.h"
 
-
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
 
@@ -42,12 +41,14 @@ void Renderer::on_present() {
 	}
 
 	gPlayerManager->update();
+	Gui::DrawDebugMenu(gPlayerManager->debug_info());
 	Esp::run();
-	AimBot::run();
-	if (global.m_setting.m_showObserversList) {
-		Gui::DrawObserversMenu(gPlayerManager->observers());
-	}
 
+	if (global.m_setting.m_aimBot.m_enable)
+		AimBot::run();
+	if (global.m_setting.m_showObserversList) 
+		Gui::DrawObserversMenu(gPlayerManager->observers());
+	
 	// Rendering
 	ImGui::Render();
 	m_pD3dDeviceContext->OMSetRenderTargets(1, &m_pD3D11RenderTargetView, nullptr);

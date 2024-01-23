@@ -7,6 +7,7 @@
 #include <vector> 
 #include <algorithm>
 #include <utility>
+#include <optional>
 
 #include <imgui.h>
   
@@ -325,6 +326,14 @@ public:
             return false;
         }
     }
+
+    bool IsHorse() const {
+        __try {
+            return GetHealthComponent()->m_Health;
+        } __except (EXCEPTION_EXECUTE_HANDLER) {
+            return false;
+        }
+    }
 }; //Size: 0x0048
 
 class UpdatePoseResultData {
@@ -411,6 +420,8 @@ public:
     char pad_1D40[8]; //0x1D40
     ClientSoldierEntity* clientSoldierEntity; //0x1D48
     char pad_1D50[736]; //0x1D50
+
+    std::optional<Vec3> GetPosition() const;
 };
 
 class RenderView {
