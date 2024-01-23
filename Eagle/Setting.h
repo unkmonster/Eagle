@@ -50,6 +50,9 @@ struct Setting {
 		Vec2 m_areaSize{1920.f, 1080.f};
 		Vec4 m_areaColor{1, 1, 1, 1};
 		int m_maxDistance = 100;
+		bool m_onlyVisible{};
+		int m_coldDown{500};
+		int m_bone{};
 	} m_aimBot;
 
 	float m_textSize = 16.f;

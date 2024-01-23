@@ -382,8 +382,11 @@ public:
     char pad_099C[1712]; //0x099C
 
     bool IsValid() {
-        if (!this->healthcomponent) return false;
-        return (this->healthcomponent->m_Health > 0.1f && this->healthcomponent->m_Health <= this->healthcomponent->m_MaxHealth);
+        __try {
+            return (this->healthcomponent->m_Health > 0.1f && this->healthcomponent->m_Health <= this->healthcomponent->m_MaxHealth);
+        } __except (EXCEPTION_EXECUTE_HANDLER) {
+            return false;
+        }
     }
     bool IsDead() {
         if (!this->healthcomponent) return true;

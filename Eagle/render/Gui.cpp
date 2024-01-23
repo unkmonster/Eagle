@@ -132,6 +132,10 @@ void Gui::AimBotPage() {
 		ImGui::SliderFloat("X", &aimbot_set.m_areaSize.x, 0, size.x);
 		ImGui::SliderFloat("Y", &aimbot_set.m_areaSize.y, 0, size.y);
 		ImGui::SliderInt("Max Effective Distance", &aimbot_set.m_maxDistance, 0, 3000);
+		ImGui::Checkbox("Only Visible", &aimbot_set.m_onlyVisible);
+		ImGui::InputInt("CD (ms)", &aimbot_set.m_coldDown, 50, 100, ImGuiInputTextFlags_None);
+		static const char* bones[] = {"Head", "Neck", "Spine2", "Spine1", "Spine"};
+		ImGui::SliderInt("Pos", &aimbot_set.m_bone, 0, 4, (aimbot_set.m_bone >= 0 && aimbot_set.m_bone < 5)? bones[aimbot_set.m_bone] : "unk", ImGuiSliderFlags_NoInput);
 		ImGui::EndChild();
 	}
 }

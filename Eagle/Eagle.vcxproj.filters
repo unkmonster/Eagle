@@ -45,6 +45,9 @@
     <ClCompile Include="feature\Esp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="feature\AimBot.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hooking\minhookcpp.h">

@@ -161,6 +161,7 @@
     <ClCompile Include="bf-1\Frosbite.cpp" />
     <ClCompile Include="bf-1\Obfuscationmanager.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="feature\AimBot.cpp" />
     <ClCompile Include="feature\Esp.cpp" />
     <ClCompile Include="feature\PlayerManager.cpp" />
     <ClCompile Include="hooking\Hooks.cpp" />

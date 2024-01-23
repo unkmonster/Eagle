@@ -25,6 +25,7 @@ void PlayerManager::update() {
 }
 
 fb::ClientPlayer * PlayerManager::GetClosetFromCrossHair(int boneId, Vec2& pos, bool onlyVisible) {
+	if (!this->m_localPlayer) return nullptr;
 	Vec2 center{ImGui::GetIO().DisplaySize.x / 2.f, ImGui::GetIO().DisplaySize.y / 2.f};
 	double minDistance{};
 	fb::ClientPlayer* result{};

@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <cassert>
 #include <typeinfo>
+#include <d3d11.h>
 
 #include "utils/Utility.h"
 #include "Logger.h"
