@@ -1,0 +1,109 @@
+// Microsoft Visual C++ generated resource script.
+//
+#pragma code_page(65001)
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    STR_OBSERVERS           "旁观者"
+    STR_VISIBLE_INVISIBLE   "可见/不可见"
+    STR_BOX                 "方框"
+    STR_VEHICLE             "载具"
+    STR_STATUS_LINE         "射线"
+    STR_HEALTH_BAR          "血条"
+    STR_NAME                "名字"
+    STR_HEALTH              "血量"
+    STR_DISTANCE            "距离"
+    STR_CROSSHAIR           "准星"
+    STR_EFFECTIVE_DISTANCE  "有效距离"
+END
+
+STRINGTABLE
+BEGIN
+    STR_ENABLE              "启用"
+    STR_SHOW_AREA           "显示区域"
+    STR_MAX_EFFECTIVE_DISTANCE "最大有效距离"
+    STR_ONLY_VISIBLE        "仅可见"
+    STR_POSITION            "位置"
+    STR_GLOBAL_FONT_SIZE    "全局字体大小"
+    STR_SHOW_OBSERVERS      "显示旁观者"
+    STR_HEAD                "头"
+    STR_NECK                "脖子"
+    STR_SPINE               "脊柱"
+    STR_ESP                 "透视"
+    STR_AIMBOT              "自瞄"
+    STR_MISC                "其它"
+    STR_SHOW                "显示"
+    STR_UNLOAD              "卸载"
+    STR_MENU                "菜单"
+END
+
+STRINGTABLE
+BEGIN
+    STR_TEXT_INFORMATION    "文本信息"
+    STR_MENU_FONT_SIZE      "菜单字体大小"
+END
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

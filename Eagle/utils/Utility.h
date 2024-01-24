@@ -37,3 +37,9 @@ inline size_t GetModuleLength(T m) {
 	auto ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(addr + dosHeader->e_lfanew);
 	return ntHeader->OptionalHeader.SizeOfImage;
 }
+
+std::string LoadStr(HMODULE module, uint32_t id);
+std::wstring LoadStrW(HMODULE module, uint32_t id);
+std::string LoadStrU8(HMODULE module, uint32_t id);
+
+std::string WstrToUtf8Str(const std::wstring& wstr);

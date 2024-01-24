@@ -1,0 +1,108 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    STR_OBSERVERS           "Observers"
+    STR_VISIBLE_INVISIBLE   "Visible/InVisible"
+    STR_BOX                 "Box"
+    STR_VEHICLE             "Vehicle"
+    STR_STATUS_LINE         "Status Line"
+    STR_HEALTH_BAR          "Health Bar"
+    STR_NAME                "Name"
+    STR_HEALTH              "Health"
+    STR_DISTANCE            "Distance"
+    STR_CROSSHAIR           "CrossHair"
+    STR_EFFECTIVE_DISTANCE  "Effective Distance"
+END
+
+STRINGTABLE
+BEGIN
+    STR_ENABLE              "Enable"
+    STR_SHOW_AREA           "Show Area"
+    STR_MAX_EFFECTIVE_DISTANCE "Max Effective Distance"
+    STR_ONLY_VISIBLE        "Only Visible"
+    STR_POSITION            "Position"
+    STR_GLOBAL_FONT_SIZE    "Global Font Size"
+    STR_SHOW_OBSERVERS      "Show Observers"
+    STR_HEAD                "Head"
+    STR_NECK                "Neck"
+    STR_SPINE               "Spine"
+    STR_ESP                 "Esp"
+    STR_AIMBOT              "AimBot"
+    STR_MISC                "Misc"
+    STR_SHOW                "Show"
+    STR_UNLOAD              "Unload"
+    STR_MENU                "Menu"
+END
+
+STRINGTABLE
+BEGIN
+    STR_TEXT_INFORMATION    "Text Information"
+    STR_MENU_FONT_SIZE      "Menu Font Size"
+END
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -36,18 +36,23 @@ void Renderer::on_present() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	if (global.m_showMenu) {
-		m_gui->DrawMenu();
+	try {
+		if (global.m_showMenu) {
+			m_gui->DrawMenu();
+		}
+
+		gPlayerManager->update();
+		Gui::DrawDebugMenu(gPlayerManager->debug_info());
+		Esp::run();
+
+		if (global.m_setting.m_aimBot.m_enable)
+			AimBot::run();
+		if (global.m_setting.m_showObserversList)
+			m_gui->DrawObserversMenu(gPlayerManager->observers());
+	} catch (const std::runtime_error& error) {
+		MessageBoxA(NULL, error.what(), PROJECTNAME, MB_ICONWARNING);
+		SendMessage(gPointers->hwnd, WM_KEYDOWN, VK_END, 0);
 	}
-
-	gPlayerManager->update();
-	Gui::DrawDebugMenu(gPlayerManager->debug_info());
-	Esp::run();
-
-	if (global.m_setting.m_aimBot.m_enable)
-		AimBot::run();
-	if (global.m_setting.m_showObserversList) 
-		Gui::DrawObserversMenu(gPlayerManager->observers());
 	
 	// Rendering
 	ImGui::Render();
