@@ -90,6 +90,7 @@ STRINGTABLE
 BEGIN
     STR_TEXT_INFORMATION    "文本信息"
     STR_MENU_FONT_SIZE      "菜单字体大小"
+    STR_THEME               "主题"
 END
 
 #endif    // 中文(简体，中国) resources

@@ -58,4 +58,5 @@ struct Setting {
 	float m_textSize = 16.f;
 	bool m_showObserversList{true};
 	float m_menuFontSize = 16.f;
+	int m_theme{};
 };

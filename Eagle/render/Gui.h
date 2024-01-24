@@ -32,9 +32,13 @@ private:
 	ImFont* m_menuFont;
 	HMODULE m_langModule;
 
+	static void SetImGuiTheme();
+	static void BigDarkTheme();
+	
 	void MenuBar();
 
 	void EspPage();
 	void AimBotPage();
 	void MiscPage();
 };
+
