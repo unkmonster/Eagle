@@ -25,7 +25,7 @@ void Esp::run() {
 
 	for (const auto& x : gPlayerManager->m_players) {
 		draw(x, false, esp_set.m_effective, localOrigin, targeted, vColor, color, oColor, 
-			esp_set.m_showBox, esp_set.m_showStatusLine, esp_set.m_showHealthBar, true);
+			esp_set.m_showBox, esp_set.m_showStatusLine, esp_set.m_showHealthBar, true, esp_set.m_showSkeleton);
 	}
 
 	// »æÖÆË®Ó¡
@@ -63,7 +63,8 @@ void Esp::draw(
 	bool showBox, 
 	bool showLine, 
 	bool showHealth, 
-	bool showText) 
+	bool showText, 
+	bool showSkeleton) 
 {
 	static auto& set = global.m_setting.m_esp;
 
@@ -184,5 +185,94 @@ void Esp::draw(
 		CSprite2d::DrawTextColumnOutline({minmax.second.x + 5.f, minmax.first.y}, infos,
 			gRenderer->m_textFont, global.m_setting.m_textSize, 0xFFFFFFFF);
 	}
+
+	// »æÖÆ¹Ç÷À
+	if (showSkeleton)
+		DrawSkeleton(plr, boxColor, width / 6.f);
 	return;
+}
+
+void Esp::DrawSkeleton(const fb::ClientPlayer * plr, uint32_t color, float headRadius) {
+	fb::ClientSoldierEntity* soldier{};
+	if (!ValidPointer(plr)) return;
+	if (!ValidPointer((soldier = plr->clientSoldierEntity))) return;
+	if (plr->InVehicle()) return;
+
+	constexpr std::size_t numMid = 5;
+	constexpr std::size_t numArm = 3;
+	constexpr std::size_t numLeg = 2;
+
+	constexpr std::size_t SPINE2 = 2;	// ¾±×µ
+	constexpr std::size_t SPINE0 = 4;	// Î²×µ
+
+	std::vector<Vec3> mid(numMid);
+	std::vector<Vec3> leftArm(numArm), rightArm(numArm);
+	std::vector<Vec3> leftLeg(numLeg), rightLeg(numLeg);
+
+	// Í· -> Î²×µ
+	if (!soldier->GetBonePos(fb::BONE_Head, &mid[0]) ||
+		!soldier->GetBonePos(fb::BONE_Neck, &mid[1]) ||
+		!soldier->GetBonePos(fb::BONE_SPINE2, &mid[2]) ||
+		!soldier->GetBonePos(fb::BONE_SPINE1, &mid[3]) ||
+		!soldier->GetBonePos(fb::BONE_Spine, &mid[4]))
+		return;
+
+	for (int i = 0; i < numMid; ++i) 
+		if (!fb::w2s(&mid[i], &mid[i])) return;
+	
+	// ¼ç°ò -> ÊÖ
+	if (!soldier->GetBonePos(fb::BONE_LeftShoulder, &leftArm[0]) ||
+		!soldier->GetBonePos(fb::BONE_LeftElbowRoll, &leftArm[1]) ||
+		!soldier->GetBonePos(fb::BONE_LeftHand, &leftArm[2]))
+		return;
+	
+	for (int i = 0; i < numArm; ++i)
+		if (!fb::w2s(&leftArm[i], &leftArm[i])) return;
+
+
+	if (!soldier->GetBonePos(fb::BONE_RightShoulder, &rightArm[0]) ||
+		!soldier->GetBonePos(fb::BONE_RightElbowRoll, &rightArm[1]) ||
+		!soldier->GetBonePos(fb::BONE_RightHand, &rightArm[2]))
+		return;
+
+	for (int i = 0; i < numArm; ++i)
+		if (!fb::w2s(&rightArm[i], &rightArm[i])) return;
+
+
+	// Ï¥¸Ç -> ½Å
+	if (!soldier->GetBonePos(fb::BONE_LeftKneeRoll, &leftLeg[0]) ||
+		!soldier->GetBonePos(fb::BONE_LeftFoot, &leftLeg[1]))
+		return;
+
+	for (int i = 0; i < numLeg; ++i)
+		if (!fb::w2s(&leftLeg[i], &leftLeg[i])) return;
+
+
+	if (!soldier->GetBonePos(fb::BONE_RightKneeRoll, &rightLeg[0]) ||
+		!soldier->GetBonePos(fb::BONE_RightFoot, &rightLeg[1]))
+		return;
+
+	for (int i = 0; i < numLeg; ++i)
+		if (!fb::w2s(&rightLeg[i], &rightLeg[i])) return;
+
+	auto connect = [color](const std::vector<Vec3>& bones) {
+		auto size = bones.size();
+		for (std::size_t i = 0; i < size - 1; ++i)
+			CSprite2d::DrawOutline(bones[i], bones[i + 1], color);
+	};
+
+	// Á¬½Ó
+	connect(mid);
+	connect(leftArm);
+	connect(rightArm);
+	connect(leftLeg);
+	connect(rightLeg);
+
+	CSprite2d::DrawOutline(mid[SPINE2], leftArm.front(), color);
+	CSprite2d::DrawOutline(mid[SPINE2], rightArm.front(), color);
+
+	CSprite2d::DrawOutline(mid[SPINE0], leftLeg.front(), color);
+	CSprite2d::DrawOutline(mid[SPINE0], rightLeg.front(), color);
+
+	ImGui::GetBackgroundDrawList()->AddCircle(mid.front(), headRadius, color);
 }

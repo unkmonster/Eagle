@@ -13,7 +13,7 @@ class Esp {
 public:
 	static void run();
 private:
-	static void draw(const fb::ClientPlayer* plr, bool includeTeammate, int effective, const std::optional<Vec3>& localOrigin, bool& targeted, uint32_t vehicleColor, uint32_t visibleColor, uint32_t invisibleColor, bool showBox, bool showLine, bool showHealth, bool showText);
+	static void draw(const fb::ClientPlayer* plr, bool includeTeammate, int effective, const std::optional<Vec3>& localOrigin, bool& targeted, uint32_t vehicleColor, uint32_t visibleColor, uint32_t invisibleColor, bool showBox, bool showLine, bool showHealth, bool showText, bool showSkeleton);
 
 	static void Draw3dBox(const std::vector<Vec2>& points, uint32_t color) {
 		// 暂时固定点位吧
@@ -75,4 +75,6 @@ private:
 		CSprite2d::DrawOutline({size.x - length, size.y}, {size.x + length, size.y}, color);
 		CSprite2d::DrawOutline({size.x, size.y - length}, {size.x, size.y + length}, color);
 	}
+
+	static void DrawSkeleton(const fb::ClientPlayer* plr, uint32_t color, float headRadius = 0.f);
 };

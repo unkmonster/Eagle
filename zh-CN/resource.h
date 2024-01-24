@@ -32,6 +32,7 @@
 #define STR_TEXT_INFORMATION            128
 #define STR_MENU_FONT_SIZE              129
 #define STR_THEME                       130
+#define STR_SKELETON                    131
 
 // Next default values for new objects
 // 

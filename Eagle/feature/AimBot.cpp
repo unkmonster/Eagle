@@ -47,7 +47,7 @@ void AimBot::run() {
 
 	bool tmp{};
 	Esp::draw(plr, false, global.m_setting.m_aimBot.m_maxDistance, selfPos, tmp,
-		0xff0000ff, 0xff0000ff, 0xff0000ff, true, false, global.m_setting.m_esp.m_showHealthBar, true);
+		0xff0000ff, 0xff0000ff, 0xff0000ff, true, false, global.m_setting.m_esp.m_showHealthBar, true, global.m_setting.m_esp.m_showSkeleton);
 	ImGui::GetBackgroundDrawList()->AddLine(cursor, pos, 0xff0000ff);
 	ImGui::GetBackgroundDrawList()->AddCircle(pos, 1.f, 0xffffffff);
 

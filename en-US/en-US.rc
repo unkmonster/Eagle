@@ -90,6 +90,7 @@ BEGIN
     STR_TEXT_INFORMATION    "Text Information"
     STR_MENU_FONT_SIZE      "Menu Font Size"
     STR_THEME               "Theme"
+    STR_SKELETON            "Skeleton"
 END
 
 #endif    // 中文(简体，中国) resources

@@ -204,22 +204,26 @@ void Gui::EspPage() {
 	ImGui::Combo("##Type", (int*)&espSet.m_boxType, "Rect\0Corner\0Cube\0");
 	
 	ImGui::SameLine();
-	ImGui::ColorEdit4("##box color", (float*)&espSet.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
+	ImGui::ColorEdit4("##", (float*)&espSet.m_boxColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
 	ImGui::ColorEdit4(LoadStrU8(m_langModule, STR_VISIBLE_INVISIBLE).c_str(), (float*)&espSet.m_boxColorOccluded, ImGuiColorEditFlags_::ImGuiColorEditFlags_NoInputs);
 	ImGui::SameLine();
 	ImGui::ColorEdit4(LoadStrU8(m_langModule, STR_VEHICLE).c_str(), (float*)&espSet.m_vehicleColor, ImGuiColorEditFlags_NoInputs);
 	
-	
+	// Line 2
+	ImGui::Checkbox(LoadStrU8(m_langModule, STR_SKELETON).c_str(), &espSet.m_showSkeleton);
+	ImGui::SameLine();
+
 	ImGui::Checkbox(LoadStrU8(m_langModule, STR_STATUS_LINE).c_str(), &espSet.m_showStatusLine);
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(75.f);
-	ImGui::Combo("##Status Line Type", (int*)&espSet.m_statusLinePos, "Up\0Bottom\0");
+	ImGui::Combo("##", (int*)&espSet.m_statusLinePos, "Up\0Bottom\0");
 
+	ImGui::SameLine();
 	ImGui::Checkbox(LoadStrU8(m_langModule, STR_HEALTH_BAR).c_str(), &espSet.m_showHealthBar);
 	ImGui::SameLine();
 	ImGui::SetNextItemWidth(75.f);
-	ImGui::Combo("##Health Bar type", (int*)&espSet.m_healthBarPos, "Top\0Bottom\0Left\0Right\0");
+	ImGui::Combo("##", (int*)&espSet.m_healthBarPos, "Top\0Bottom\0Left\0Right\0");
 
 	ImGui::SeparatorText(LoadStrU8(m_langModule, STR_TEXT_INFORMATION).c_str());
 	ImGui::Checkbox(LoadStrU8(m_langModule, STR_NAME).c_str(), &espSet.m_showName);

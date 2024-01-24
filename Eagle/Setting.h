@@ -42,6 +42,9 @@ struct Setting {
 		bool m_showCrossHair{true};
 		Vec4 m_crossHairColor{1, 1, 1, 1};
 		Vec4 m_crossHairColorAtEnemy{1, 0, 0, 1};
+
+		// Skeleton
+		bool m_showSkeleton{true};
 	} m_esp;
 
 	struct AimBot {
@@ -50,7 +53,7 @@ struct Setting {
 		Vec2 m_areaSize{1920.f, 1080.f};
 		Vec4 m_areaColor{1, 1, 1, 1};
 		int m_maxDistance = 100;
-		bool m_onlyVisible{};
+		bool m_onlyVisible{true};
 		int m_coldDown{500};
 		int m_bone{};
 	} m_aimBot;
